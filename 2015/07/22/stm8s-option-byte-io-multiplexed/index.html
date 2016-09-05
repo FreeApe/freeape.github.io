@@ -1,0 +1,833 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="stm8s," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="详见博客：http://blog.csdn.net/freeape/article/details/47008033
+功能实现目标&amp;emsp;&amp;emsp;通过对选项字节的写操作来实现TIM2的CH3通道的PWM输出IO复用，可以设置为PA3或者PD2输出。
+通过STVP方式操作链接
+选项字节&amp;emsp;&amp;emsp;选项字节包括芯片硬件特性的配置和存储器的保护信息，这些字节保存在存储器中一个专用的块">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STM8S之选项字节(Option Byte)写操作之IO复用">
+<meta property="og:url" content="http://yicm.me/2015/07/22/stm8s-option-byte-io-multiplexed/index.html">
+<meta property="og:site_name" content="依成名的博客">
+<meta property="og:description" content="详见博客：http://blog.csdn.net/freeape/article/details/47008033
+功能实现目标&amp;emsp;&amp;emsp;通过对选项字节的写操作来实现TIM2的CH3通道的PWM输出IO复用，可以设置为PA3或者PD2输出。
+通过STVP方式操作链接
+选项字节&amp;emsp;&amp;emsp;选项字节包括芯片硬件特性的配置和存储器的保护信息，这些字节保存在存储器中一个专用的块">
+<meta property="og:image" content="http://img.blog.csdn.net/20150722185435754">
+<meta property="og:image" content="http://img.blog.csdn.net/20150722185535534">
+<meta property="og:image" content="http://img.blog.csdn.net/20150722185705420">
+<meta property="og:image" content="http://img.blog.csdn.net/20150722185740203">
+<meta property="og:image" content="http://img.blog.csdn.net/20150722190244872">
+<meta property="og:image" content="http://img.blog.csdn.net/20150722190450455">
+<meta property="og:image" content="http://img.blog.csdn.net/20150722190530697">
+<meta property="og:image" content="http://img.blog.csdn.net/20150722190602848">
+<meta property="og:updated_time" content="2016-09-05T17:36:22.839Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="STM8S之选项字节(Option Byte)写操作之IO复用">
+<meta name="twitter:description" content="详见博客：http://blog.csdn.net/freeape/article/details/47008033
+功能实现目标&amp;emsp;&amp;emsp;通过对选项字节的写操作来实现TIM2的CH3通道的PWM输出IO复用，可以设置为PA3或者PD2输出。
+通过STVP方式操作链接
+选项字节&amp;emsp;&amp;emsp;选项字节包括芯片硬件特性的配置和存储器的保护信息，这些字节保存在存储器中一个专用的块">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20150722185435754">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> STM8S之选项字节(Option Byte)写操作之IO复用 | 依成名的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?8f6526fe53ee8a7814e4d1f267a37c28";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">依成名的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">---学无止境，折腾不止</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user-secret"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                STM8S之选项字节(Option Byte)写操作之IO复用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-07-22T19:10:51+08:00" content="2015-07-22">
+              2015-07-22
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/硬件/" itemprop="url" rel="index">
+                    <span itemprop="name">硬件</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/07/22/stm8s-option-byte-io-multiplexed/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/22/stm8s-option-byte-io-multiplexed/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2015/07/22/stm8s-option-byte-io-multiplexed/" class="leancloud_visitors" data-flag-title="STM8S之选项字节(Option Byte)写操作之IO复用">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>详见博客：<a href="http://blog.csdn.net/freeape/article/details/47008033" target="_blank" rel="external">http://blog.csdn.net/freeape/article/details/47008033</a></p>
+<h1 id="功能实现目标"><a href="#功能实现目标" class="headerlink" title="功能实现目标"></a>功能实现目标</h1><p>&emsp;&emsp;通过对选项字节的写操作来实现TIM2的CH3通道的PWM输出IO复用，可以设置为PA3或者PD2输出。</p>
+<p><a href="http://blog.csdn.net/freeape/article/details/46773155" target="_blank" rel="external">通过STVP方式操作链接</a></p>
+<h1 id="选项字节"><a href="#选项字节" class="headerlink" title="选项字节"></a>选项字节</h1><p>&emsp;&emsp;选项字节包括芯片硬件特性的配置和存储器的保护信息，这些字节保存在存储器中一个专用的块内。除了ROP（读出保护）字节，每个选项字节必须被保存两次，一个是通常的格式（OPTx）和一个用来备份互补格式的（NOPTx）。选项字节可以通过应用程序在IAP模式下修改，但是ROP选项只能在ICP模式（通过SWIM）下被修改。有关SWIM编程过程的内容可以参考STM8S闪存编程手册（PM0051）和STM8 SWIM通信协议和调试模块用户手册（UM0470）。<br>&emsp;&emsp;不同的芯片的选项字节大小不一样，具体的可以参考芯片数据手册。如用STM8S103F3来举例，选项字节如下：</p>
+<p><img src="http://img.blog.csdn.net/20150722185435754" alt="选项字节"></p>
+<p>&emsp;&emsp;STM8S103F对于20脚封装的产品的复用功能重定义位：</p>
+<p><img src="http://img.blog.csdn.net/20150722185535534" alt="STM8S103F复用功能重定义位"></p>
+<p>&emsp;&emsp;由此可知我们要将OPT2字节中的AFR1位进行写操作，通过写0，则端口A3复用功能TIM2_CH3，通过写1，端口D2复用功能TIM2_CH3。接下来通过程序实现这个功能，可以修改AFR1的值来看PWM输出是否切换了管脚，如果能，则是实现了写操作。<br>&emsp;&emsp;选项字节存放在EEPROM中，所以可以通过读写EEPROM一样的操作方式来修改选项字节。应用程序可以直接向目标地址进行写操作。地址从上面的图中我们已经知道了：0x4803,0x4804。寄存器的配置可以查阅参考手册（RM0016）。<br>&emsp;&emsp;相关寄存器操作：</p>
+<p><img src="http://img.blog.csdn.net/20150722185705420" alt="FLASH_CR2"></p>
+<p><img src="http://img.blog.csdn.net/20150722185740203" alt="FLASH_NCR2"></p>
+<h1 id="测试程序实现"><a href="#测试程序实现" class="headerlink" title="测试程序实现"></a>测试程序实现</h1><p>&emsp;&emsp;<strong>注意：</strong>实现程序擦写Option Bytes时，<strong><em>不能运行应用程序</em></strong>，否则会出现错误！不过还是觉得这点麻烦啊，还不如用STVP来擦写，要是能够放在应用程序中共存来擦写就好了，用程序实现复用就这么麻烦吗？希望能探索找到好的方法，最后只找到了个不靠谱的，就是在擦写后<strong>加上延时</strong>，但是这个时管用时不管用。还是再查阅资料看看是怎么回事？</p>
+<p><img src="http://img.blog.csdn.net/20150722190244872" alt="ST Visual Develop"></p>
+<p>&emsp;&emsp;但是用STVP擦写时又遇到了这个错误：</p>
+<pre><code>Error : Error on Option Bytes (complementary bytes). Reprogram Option Bytes of device
+Error : &lt; OPTION BYTE verifying failed.
+</code></pre><p>&emsp;&emsp;用STVP来擦写Option Bytes了，先将ROP设置为<strong>ON</strong>，然后再擦写Option Bytes，会出现两个提示框，选择<strong>是(Y)</strong>，再之后又将ROP设置为<strong>OFF</strong>，再次擦写Option Bytes，则又可以用STVD通过stlink来烧写程序并仿真了。</p>
+<p><img src="http://img.blog.csdn.net/20150722190450455" alt="STVP program option bytes"></p>
+<p><img src="http://img.blog.csdn.net/20150722190530697" alt="T1"></p>
+<p><img src="http://img.blog.csdn.net/20150722190602848" alt="T2"></p>
+<pre><code>测试程序：
+</code></pre><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* MAIN.C file</span><br><span class="line">Functons	:	操作option byte字节,设置IO复用,来修改TIM2的CH3通道PWM输出管脚PA3 or PD2</span><br><span class="line">Date		:	2015年7月22日</span><br><span class="line">Author		:	yicm</span><br><span class="line">Notes		:	</span><br><span class="line"> */</span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stm8s003f3p.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CLK_init</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	CLK_ICKR |= <span class="number">0X01</span>;    	    <span class="comment">//使能内部高速时钟 HSI</span></span><br><span class="line">	CLK_CKDIVR = <span class="number">0x08</span>;			<span class="comment">//16M内部RC经2分频后系统时钟为8M</span></span><br><span class="line">	<span class="keyword">while</span>(!(CLK_ICKR&amp;<span class="number">0x02</span>));	<span class="comment">//HSI准备就绪 </span></span><br><span class="line">	CLK_SWR=<span class="number">0xe1</span>;				<span class="comment">//HSI为主时钟源 </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_GPIO</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="comment">/*设置为推挽输出,PD2接了LED灯*/</span></span><br><span class="line">	PD_DDR |= <span class="number">0X04</span>;     		<span class="comment">//设置PD2端口为输出模式</span></span><br><span class="line">	PD_CR1 |= <span class="number">0X04</span>;     		<span class="comment">//设置PD2端口为推挽输出模式</span></span><br><span class="line">	PD_CR2 &amp;= <span class="number">0XFD</span>;</span><br><span class="line">	</span><br><span class="line">	PA_DDR |= <span class="number">0X08</span>;     		<span class="comment">//设置PA3端口为输出模式</span></span><br><span class="line">	PA_CR1 |= <span class="number">0X08</span>;     		<span class="comment">//设置PA3端口为推挽输出模式</span></span><br><span class="line">	PA_CR2 |= <span class="number">0XF7</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_Tim2</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	TIM2_CCMR3 |=	<span class="number">0X70</span>;   <span class="comment">//设置定时器2三通道(PD2)输出比较三模式</span></span><br><span class="line">	TIM2_CCMR3 |= <span class="number">0X04</span>;		<span class="comment">//输出比较3预装载使能</span></span><br><span class="line">	</span><br><span class="line">	TIM2_CCER2 |= <span class="number">0x03</span>;		<span class="comment">//通道3使能，低电平有效，配置为输出</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 初始化时钟分频器为1，即计数器的时钟频率为Fmaster=8M/64=0.125MHZ</span></span><br><span class="line">	TIM2_PSCR = <span class="number">0X07</span>;	</span><br><span class="line">	<span class="comment">//初始化自动装载寄存器，决定PWM 方波的频率，Fpwm=0.125M/62500=2HZ</span></span><br><span class="line">	TIM2_ARRH = <span class="number">62500</span>/<span class="number">256</span>;</span><br><span class="line">	TIM2_ARRL = <span class="number">62500</span>%<span class="number">256</span>;</span><br><span class="line">	<span class="comment">//初始化比较寄存器，决定PWM 方波的占空比：5000/10000 = 50%</span></span><br><span class="line">	TIM2_CCR3H = <span class="number">31250</span>/<span class="number">256</span>;</span><br><span class="line">	TIM2_CCR3L = <span class="number">31250</span>%<span class="number">256</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">//启动计数;更新中断失能</span></span><br><span class="line">	TIM2_CR1 |= <span class="number">0x81</span>;</span><br><span class="line">	<span class="comment">//TIM2_IER |= 0x00;        </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Write_Option_Byte</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;	</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> opt[<span class="number">6</span>] = &#123;<span class="number">0</span>,<span class="number">0</span>,<span class="number">0x00</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>&#125;;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/*解锁Flash*/</span></span><br><span class="line">	<span class="keyword">do</span></span><br><span class="line">	&#123;</span><br><span class="line">		FLASH_DUKR = <span class="number">0xAE</span>;</span><br><span class="line">		FLASH_DUKR = <span class="number">0x56</span>;		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(!(FLASH_IAPSR &amp; <span class="number">0X08</span>));</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/*对选项字节进行写操作使能*/</span></span><br><span class="line">	FLASH_CR2 = <span class="number">0X80</span>;</span><br><span class="line">	<span class="comment">/*互补控制寄存器*/</span></span><br><span class="line">	FLASH_NCR2 = <span class="number">0X7F</span>;</span><br><span class="line">	<span class="comment">/*写操作,0x02:PD2。0x00:PA3*/</span></span><br><span class="line">	*((<span class="keyword">unsigned</span> <span class="keyword">char</span> *)<span class="number">0x4800</span>) = opt[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">	*((<span class="keyword">unsigned</span> <span class="keyword">char</span> *)<span class="number">0x4801</span>) = opt[<span class="number">1</span>];</span><br><span class="line">	*((<span class="keyword">unsigned</span> <span class="keyword">char</span> *)<span class="number">0x4802</span>) = ~opt[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">	*((<span class="keyword">unsigned</span> <span class="keyword">char</span> *)<span class="number">0x4803</span>) = opt[<span class="number">2</span>];</span><br><span class="line">	*((<span class="keyword">unsigned</span> <span class="keyword">char</span> *)<span class="number">0x4804</span>) = ~opt[<span class="number">2</span>];</span><br><span class="line">	</span><br><span class="line">	*((<span class="keyword">unsigned</span> <span class="keyword">char</span> *)<span class="number">0x4805</span>) = opt[<span class="number">3</span>];</span><br><span class="line">	*((<span class="keyword">unsigned</span> <span class="keyword">char</span> *)<span class="number">0x4806</span>) = ~opt[<span class="number">3</span>];</span><br><span class="line"></span><br><span class="line">	*((<span class="keyword">unsigned</span> <span class="keyword">char</span> *)<span class="number">0x4807</span>) = opt[<span class="number">4</span>];</span><br><span class="line">	*((<span class="keyword">unsigned</span> <span class="keyword">char</span> *)<span class="number">0x4808</span>) = ~opt[<span class="number">0</span>];</span><br><span class="line">	</span><br><span class="line">	*((<span class="keyword">unsigned</span> <span class="keyword">char</span> *)<span class="number">0x4809</span>) = opt[<span class="number">5</span>];</span><br><span class="line">	*((<span class="keyword">unsigned</span> <span class="keyword">char</span> *)<span class="number">0x480A</span>) = ~opt[<span class="number">5</span>];	</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/*等待写结束*/</span></span><br><span class="line">	<span class="keyword">while</span>(!(FLASH_IAPSR &amp; <span class="number">0x04</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">main()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	</span><br><span class="line">	Write_Option_Byte();	<span class="comment">//运行程序时，屏蔽	</span></span><br><span class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;<span class="number">10000</span>;++i);	<span class="comment">//延时效果，有时加上延时，能够使擦写和应用程序同时不屏蔽也能管用</span></span><br><span class="line">	</span><br><span class="line">	CLK_init();				<span class="comment">//擦写时屏蔽，否则下次stlink仿真时会出错</span></span><br><span class="line">	Init_GPIO();			<span class="comment">//擦写时屏蔽，否则下次stlink仿真时会出错</span></span><br><span class="line">	Init_Tim2();			<span class="comment">//擦写时屏蔽，否则下次stlink仿真时会出错</span></span><br><span class="line">	<span class="keyword">while</span> (<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/stm8s/" rel="tag">#stm8s</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/07/21/stm8s-long-key-pressed/" rel="next" title="STM8S之外部中断应用之长按键识别">
+                <i class="fa fa-chevron-left"></i> STM8S之外部中断应用之长按键识别
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2015/07/22/stm8s-option-byte-io-multiplexed/"
+     data-title="STM8S之选项字节(Option Byte)写操作之IO复用"
+     data-content=""
+     data-url="http://yicm.me/2015/07/22/stm8s-option-byte-io-multiplexed/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/07/22/stm8s-option-byte-io-multiplexed/"
+           data-title="STM8S之选项字节(Option Byte)写操作之IO复用" data-url="http://yicm.me/2015/07/22/stm8s-option-byte-io-multiplexed/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/avatar/avatar.jpg"
+               alt="依成名" />
+          <p class="site-author-name" itemprop="name">依成名</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/freeape" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/freeape" target="_blank" title="CSDN">
+                  
+                    <i class="fa fa-fw fa-angellist"></i>
+                  
+                  CSDN
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/huangyi520forever" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#功能实现目标"><span class="nav-number">1.</span> <span class="nav-text">功能实现目标</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#选项字节"><span class="nav-number">2.</span> <span class="nav-text">选项字节</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试程序实现"><span class="nav-number">3.</span> <span class="nav-text">测试程序实现</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">依成名</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"freeape"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("JhJdKepwexwAupA0SXBWX6QQ-gzGzoHsz", "jbRztzIopC6OGVNrRWXw8SUf");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>

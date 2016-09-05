@@ -84,40 +84,19 @@
 
 
 
-<meta name="description" content="详见博客：http://blog.csdn.net/freeape/article/details/46778003
-1 说明
-采用STM8S内部时钟（HSI）；
-PWM模式2；
-占空比为50%，频率为2Hz(方便测试LED灯)；
-PD2口外接LED灯，PD2口输出PWM波；
-系统时钟初始化很重要:CLK_CKDIVR  |=  0x08;
-
-2 代码12345678910111213141516">
+<meta name="description" content="详见博客：http://blog.csdn.net/freeape/article/details/46793457
+1 GPIO设置&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;STM8 I/O 口引脚配置表| Px_DDR |  Px_CR1 | P">
 <meta property="og:type" content="article">
-<meta property="og:title" content="STM8S之定时器产生PWM（TIM2）">
-<meta property="og:url" content="http://yicm.me/2015/07/06/stm8s-timer-pwm/index.html">
+<meta property="og:title" content="STM8S之独立按键IO口设置及按下事件问题">
+<meta property="og:url" content="http://yicm.me/2015/07/07/stm8s-single-key-pressed/index.html">
 <meta property="og:site_name" content="依成名的博客">
-<meta property="og:description" content="详见博客：http://blog.csdn.net/freeape/article/details/46778003
-1 说明
-采用STM8S内部时钟（HSI）；
-PWM模式2；
-占空比为50%，频率为2Hz(方便测试LED灯)；
-PD2口外接LED灯，PD2口输出PWM波；
-系统时钟初始化很重要:CLK_CKDIVR  |=  0x08;
-
-2 代码12345678910111213141516">
-<meta property="og:updated_time" content="2016-09-05T17:23:00.226Z">
+<meta property="og:description" content="详见博客：http://blog.csdn.net/freeape/article/details/46793457
+1 GPIO设置&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;STM8 I/O 口引脚配置表| Px_DDR |  Px_CR1 | P">
+<meta property="og:updated_time" content="2016-09-05T17:33:18.735Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="STM8S之定时器产生PWM（TIM2）">
-<meta name="twitter:description" content="详见博客：http://blog.csdn.net/freeape/article/details/46778003
-1 说明
-采用STM8S内部时钟（HSI）；
-PWM模式2；
-占空比为50%，频率为2Hz(方便测试LED灯)；
-PD2口外接LED灯，PD2口输出PWM波；
-系统时钟初始化很重要:CLK_CKDIVR  |=  0x08;
-
-2 代码12345678910111213141516">
+<meta name="twitter:title" content="STM8S之独立按键IO口设置及按下事件问题">
+<meta name="twitter:description" content="详见博客：http://blog.csdn.net/freeape/article/details/46793457
+1 GPIO设置&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;STM8 I/O 口引脚配置表| Px_DDR |  Px_CR1 | P">
 
 
 
@@ -135,7 +114,7 @@ PD2口外接LED灯，PD2口输出PWM波；
   };
 </script>
 
-  <title> STM8S之定时器产生PWM（TIM2） | 依成名的博客 </title>
+  <title> STM8S之独立按键IO口设置及按下事件问题 | 依成名的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -285,7 +264,7 @@ PD2口外接LED灯，PD2口输出PWM波；
             
             
               
-                STM8S之定时器产生PWM（TIM2）
+                STM8S之独立按键IO口设置及按下事件问题
               
             
           </h1>
@@ -297,8 +276,8 @@ PD2口外接LED灯，PD2口输出PWM波；
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-07-06T18:56:51+08:00" content="2015-07-06">
-              2015-07-06
+            <time itemprop="dateCreated" datetime="2015-07-07T19:39:51+08:00" content="2015-07-07">
+              2015-07-07
             </time>
           </span>
 
@@ -327,8 +306,8 @@ PD2口外接LED灯，PD2口输出PWM波；
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/07/06/stm8s-timer-pwm/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/06/stm8s-timer-pwm/" itemprop="commentsCount"></span>
+                <a href="/2015/07/07/stm8s-single-key-pressed/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/07/stm8s-single-key-pressed/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -338,7 +317,7 @@ PD2口外接LED灯，PD2口输出PWM波；
 
           
           
-             <span id="/2015/07/06/stm8s-timer-pwm/" class="leancloud_visitors" data-flag-title="STM8S之定时器产生PWM（TIM2）">
+             <span id="/2015/07/07/stm8s-single-key-pressed/" class="leancloud_visitors" data-flag-title="STM8S之独立按键IO口设置及按下事件问题">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -360,15 +339,28 @@ PD2口外接LED灯，PD2口输出PWM波；
       
 
       
-        <p>详见博客：<a href="http://blog.csdn.net/freeape/article/details/46778003" target="_blank" rel="external">http://blog.csdn.net/freeape/article/details/46778003</a></p>
-<h2 id="1-说明"><a href="#1-说明" class="headerlink" title="1 说明"></a>1 说明</h2><ul>
-<li>采用STM8S内部时钟（HSI）；</li>
-<li>PWM模式2；</li>
-<li>占空比为50%，频率为2Hz(方便测试LED灯)；</li>
-<li>PD2口外接LED灯，PD2口输出PWM波；</li>
-<li>系统时钟初始化很重要:CLK_CKDIVR  <strong>|=</strong>  0x08;</li>
+        <p>详见博客：<a href="http://blog.csdn.net/freeape/article/details/46793457" target="_blank" rel="external">http://blog.csdn.net/freeape/article/details/46793457</a></p>
+<h1 id="1-GPIO设置"><a href="#1-GPIO设置" class="headerlink" title="1 GPIO设置"></a>1 GPIO设置</h1><p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<strong>STM8 I/O 口引脚配置表</strong><br>| Px_DDR |  Px_CR1 | Px_CR2 | I/O 方式 | 引脚状态 |<br>| :————-: |:————-:| :—–:| :—–:|<br>| 0| 0| 0 |输入|悬浮输入|<br>| 0| 0| 1 |输入|上拉输入|<br>| 0| 1| 0 |输入|中断悬浮输入|<br>| 0| 1| 1 |输入|中断上拉输入|<br>| 1| 0| 0 |输出|开漏输出|<br>| 1| 1| 0 |输出|推挽输出|<br>| 1| x| 1 |输出|输出（最快速度为10MHZ）|<br>对STM8S的IO配置，我们只需要操作五个寄存器就行了：</p>
+<ul>
+<li><strong>输出</strong>数据寄存器 (ODR)</li>
+<li><strong>输入</strong>数据寄存器 (IDR)</li>
+<li>数据方向寄存器 (DDR)</li>
+<li>控制寄存器1(CR1)</li>
+<li>控制寄存器2(CR2)</li>
 </ul>
-<h2 id="2-代码"><a href="#2-代码" class="headerlink" title="2 代码"></a>2 代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line">TIM2_CH3 PWM</span><br><span class="line">PD2 output</span><br><span class="line">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;STM8S003F3P.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CLK_init</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	CLK_ICKR |= <span class="number">0X01</span>;    		<span class="comment">//使能内部高速时钟 HSI</span></span><br><span class="line">	CLK_CKDIVR |= <span class="number">0x08</span>;			<span class="comment">//16M内部RC经2分频后系统时钟为8M</span></span><br><span class="line">	<span class="keyword">while</span>(!(CLK_ICKR&amp;<span class="number">0x02</span>));	<span class="comment">//HSI准备就绪 </span></span><br><span class="line">	CLK_SWR=<span class="number">0xe1</span>;				<span class="comment">//HSI为主时钟源 </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_Tim2</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	TIM2_CCMR3 |=	<span class="number">0X70</span>;   <span class="comment">//设置定时器2三通道(PD2)输出比较三模式</span></span><br><span class="line">	TIM2_CCMR3 |= <span class="number">0X04</span>;		<span class="comment">//输出比较3预装载使能</span></span><br><span class="line">	</span><br><span class="line">	TIM2_CCER2 |= <span class="number">0x03</span>;		<span class="comment">//通道3使能，低电平有效，配置为输出</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">//初始化时钟分频器为1，即计数器的时钟频率为Fmaster=8M/64=0.125MHZ</span></span><br><span class="line">	TIM2_PSCR = <span class="number">0X06</span>;	</span><br><span class="line">	<span class="comment">//初始化自动装载寄存器，决定PWM 方波的频率，Fpwm=0.125M/62500=2HZ</span></span><br><span class="line">	TIM2_ARRH = <span class="number">62500</span>/<span class="number">256</span>;</span><br><span class="line">	TIM2_ARRL = <span class="number">62500</span>%<span class="number">256</span>;</span><br><span class="line">	<span class="comment">//初始化比较寄存器，决定PWM 方波的占空比：5000/10000 = 50%</span></span><br><span class="line">	TIM2_CCR3H = <span class="number">31250</span>/<span class="number">256</span>;</span><br><span class="line">	TIM2_CCR3L = <span class="number">31250</span>%<span class="number">256</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 启动计数;更新中断失能</span></span><br><span class="line">	TIM2_CR1 |= <span class="number">0x81</span>;</span><br><span class="line">	<span class="comment">//TIM2_IER |= 0x00;        </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_GPIO</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="comment">/*设置为推挽输出,PD2接了LED灯*/</span></span><br><span class="line">	PD_DDR |= <span class="number">0X04</span>;     		<span class="comment">//设置PD2端口为输出模式</span></span><br><span class="line">	PD_CR1 |= <span class="number">0X04</span>;     		<span class="comment">//设置PD2端口为推挽输出模式</span></span><br><span class="line">	PD_CR2 &amp;= <span class="number">0XFD</span>;</span><br><span class="line">	</span><br><span class="line">	PA_DDR |= <span class="number">0X08</span>;     		<span class="comment">//设置PA3端口为输出模式</span></span><br><span class="line">	PA_CR1 |= <span class="number">0X08</span>;     		<span class="comment">//设置PA3端口为推挽输出模式</span></span><br><span class="line">	PA_CR2 |= <span class="number">0XF7</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	CLK_init();</span><br><span class="line">	Init_GPIO();</span><br><span class="line">	Init_Tim2();</span><br><span class="line">	<span class="keyword">while</span> (<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="2-按键检测"><a href="#2-按键检测" class="headerlink" title="2 按键检测"></a>2 按键检测</h1><p>&emsp;&emsp;在做独立按键检测的时候，设置成<strong>上拉输入</strong>不能实现功能，设置成<strong>中断悬浮输入</strong>就可以了。<br>&emsp;&emsp;两次短按键之间的时间间隔大约在300ms~600ms之间。一次短按键按下的时间大约在14ms~26ms之间；</p>
+<h2 id="2-1-连续按键检测（短按-长按）"><a href="#2-1-连续按键检测（短按-长按）" class="headerlink" title="2.1 连续按键检测（短按+长按）"></a>2.1 连续按键检测（短按+长按）</h2><p><strong>定时器TIM1 + 按键 = 连续按键检测（短按键+长按键）</strong><br><strong>两个标记：</strong></p>
+<ul>
+<li>短按+长按—flag0</li>
+<li>短按后时间在规定范围之内—flag1</li>
+</ul>
+<p>如果两个标记都满足，则开/关电源；每次按键都启动按键计时；</p>
+<p><strong>当两次按键的时间间隔在300ms~600ms之间的时候，怎么得到第一次（短按）和第二次（长按）按键之间的时间呢？</strong><br>&emsp;&emsp;如果判断了是短按，则开启计时，同时将第一次短按flag置一，超过600ms停止计时并清零，等待第二次的按键；有了第二次的按键之后，在短按置一flag条件中中断计时，判断是否在规定范围之内的时间间隔，是则将flag1置一；并接下来判断该按键是长按还是短按，如果是长按，则将flag0置一，满足flag0、flag1均置一，则是连续按键。</p>
+<h1 id="3-关键代码"><a href="#3-关键代码" class="headerlink" title="3 关键代码"></a>3 关键代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line">return = </span><br><span class="line">	0	:	No Key Press</span><br><span class="line">	1	:	Single Key Press</span><br><span class="line">	2	:   将长按作为一次单独按键，并执行Single Key Press功能	</span><br><span class="line">	3	:	Double Key Press</span><br><span class="line">*/</span></span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="title">Key_Scan</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span>(<span class="number">0</span> == KEY)</span><br><span class="line">	&#123;</span><br><span class="line">		Delay(<span class="number">2</span>);</span><br><span class="line">		<span class="keyword">if</span>(<span class="number">0</span> == KEY)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span>(<span class="number">1</span> == keytimesFlag)</span><br><span class="line">			&#123;</span><br><span class="line">				afterOnceShortPressFlag = <span class="number">0</span>;</span><br><span class="line">				<span class="keyword">if</span>((afterOnceShortPressCount &lt;=<span class="number">30</span>) </span><br><span class="line">					&amp;&amp; (afterOnceShortPressCount &gt; <span class="number">15</span>))</span><br><span class="line">				&#123;</span><br><span class="line">					isSetTimeFlag = <span class="number">1</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span> isSetTimeFlag = <span class="number">0</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			keyFlag = <span class="number">1</span>;</span><br><span class="line">			<span class="keyword">while</span>(!KEY);</span><br><span class="line">			keyFlag = <span class="number">0</span>;</span><br><span class="line">			count = keyCount;</span><br><span class="line">			keyCount = <span class="number">0</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			count = <span class="number">0</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(count &gt;= <span class="number">200</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(<span class="number">1</span> == isSetTimeFlag)</span><br><span class="line">		&#123;</span><br><span class="line">			isSetTimeFlag = <span class="number">0</span>;</span><br><span class="line">			keytimesFlag = <span class="number">0</span>;</span><br><span class="line">			<span class="keyword">return</span> <span class="number">3</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> </span><br><span class="line">		&#123;</span><br><span class="line">			keytimesFlag = <span class="number">0</span>;</span><br><span class="line">			<span class="keyword">return</span> <span class="number">2</span>;			</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(count &gt;= <span class="number">4</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		afterOnceShortPressFlag = <span class="number">1</span>;</span><br><span class="line">		afterOnceShortPressCount = <span class="number">0</span>;</span><br><span class="line">		keytimesFlag = <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在定时周期为10ms的定时器中断函数里：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">@far @<span class="function">interrupt <span class="keyword">void</span> <span class="title">TIM1_UPD_OVF_TRG_BRK_IRQHandler</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;	</span><br><span class="line">	TIM1_SR1 &amp;=~(<span class="number">0x01</span>);	</span><br><span class="line">	<span class="keyword">if</span>(<span class="number">1</span> == keyFlag)</span><br><span class="line">	&#123;</span><br><span class="line">		++keyCount;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> ;</span><br><span class="line">	<span class="keyword">if</span>(<span class="number">1</span> == afterOnceShortPressFlag)</span><br><span class="line">	&#123;</span><br><span class="line">		++afterOnceShortPressCount;</span><br><span class="line">		<span class="keyword">if</span>(afterOnceShortPressCount &gt; <span class="number">80</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			afterOnceShortPressFlag = <span class="number">0</span>;</span><br><span class="line">			afterOnceShortPressCount = <span class="number">0</span>;</span><br><span class="line">			keytimesFlag = <span class="number">0</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;另参见使用外部中断长按键识别：<a href="http://blog.csdn.net/freeape/article/details/46990181" target="_blank" rel="external">使用外部中断识别长按键</a></p>
+
       
     </div>
 
@@ -398,16 +390,16 @@ PD2口外接LED灯，PD2口输出PWM波；
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/07/06/stm8s-io-multiplexed/" rel="next" title="STM8S之IO复用配置(STVP方式)">
-                <i class="fa fa-chevron-left"></i> STM8S之IO复用配置(STVP方式)
+              <a href="/2015/07/06/stm8s-timer-pwm/" rel="next" title="STM8S之定时器产生PWM（TIM2）">
+                <i class="fa fa-chevron-left"></i> STM8S之定时器产生PWM（TIM2）
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/07/07/stm8s-single-key-pressed/" rel="prev" title="STM8S之独立按键IO口设置及按下事件问题">
-                STM8S之独立按键IO口设置及按下事件问题 <i class="fa fa-chevron-right"></i>
+              <a href="/2015/07/08/stm8s-tim2-pwm-tim1-period-interupt/" rel="prev" title="STM8S之TIM2产生PWM与TIM1定时器周期中断的时钟问题">
+                STM8S之TIM2产生PWM与TIM1定时器周期中断的时钟问题 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -423,10 +415,10 @@ PD2口外接LED灯，PD2口输出PWM波；
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2015/07/06/stm8s-timer-pwm/"
-     data-title="STM8S之定时器产生PWM（TIM2）"
+        <div class="ds-share flat" data-thread-key="2015/07/07/stm8s-single-key-pressed/"
+     data-title="STM8S之独立按键IO口设置及按下事件问题"
      data-content=""
-     data-url="http://yicm.me/2015/07/06/stm8s-timer-pwm/">
+     data-url="http://yicm.me/2015/07/07/stm8s-single-key-pressed/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -453,8 +445,8 @@ PD2口外接LED灯，PD2口输出PWM波；
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/07/06/stm8s-timer-pwm/"
-           data-title="STM8S之定时器产生PWM（TIM2）" data-url="http://yicm.me/2015/07/06/stm8s-timer-pwm/">
+      <div class="ds-thread" data-thread-key="2015/07/07/stm8s-single-key-pressed/"
+           data-title="STM8S之独立按键IO口设置及按下事件问题" data-url="http://yicm.me/2015/07/07/stm8s-single-key-pressed/">
       </div>
     
   </div>
@@ -574,7 +566,7 @@ PD2口外接LED灯，PD2口输出PWM波；
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-说明"><span class="nav-number">1.</span> <span class="nav-text">1 说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-代码"><span class="nav-number">2.</span> <span class="nav-text">2 代码</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-GPIO设置"><span class="nav-number">1.</span> <span class="nav-text">1 GPIO设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-按键检测"><span class="nav-number">2.</span> <span class="nav-text">2 按键检测</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-连续按键检测（短按-长按）"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 连续按键检测（短按+长按）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-关键代码"><span class="nav-number">3.</span> <span class="nav-text">3 关键代码</span></a></li></ol></div>
             
           </div>
         </section>
