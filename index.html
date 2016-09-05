@@ -263,6 +263,164 @@
             
               
                 
+                <a class="post-title-link" href="/2015/07/22/stm8s-power-waste-halt-mode/" itemprop="url">
+                  STM8S之电源功耗管理之停机模式(halt)实现
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-07-22T20:11:51+08:00" content="2015-07-22">
+              2015-07-22
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/硬件/" itemprop="url" rel="index">
+                    <span itemprop="name">硬件</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/07/22/stm8s-power-waste-halt-mode/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/22/stm8s-power-waste-halt-mode/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2015/07/22/stm8s-power-waste-halt-mode/" class="leancloud_visitors" data-flag-title="STM8S之电源功耗管理之停机模式(halt)实现">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>详见博客：<a href="http://blog.csdn.net/freeape/article/details/47008805" target="_blank" rel="external">http://blog.csdn.net/freeape/article/details/47008805</a></p>
+<h1 id="官方资料"><a href="#官方资料" class="headerlink" title="官方资料"></a>官方资料</h1><p>&emsp;&emsp;可以去网络搜索中文版，或者到<a href="www.st.com">官方网站</a>上去下载英文版。<br>&emsp;&emsp;英文:</p>
+<p><img src="http://img.blog.csdn.net/20150722200301984" alt="英文"></p>
+<p>&emsp;&emsp;译文：</p>
+<p><img src="http://img.blog.csdn.net/20150722200345143" alt="译文"></p>
+<h1 id="主要内容简介"><a href="#主要内容简介" class="headerlink" title="主要内容简介"></a>主要内容简介</h1><ul>
+<li>影响功耗的主要因素</li>
+<li>电源系统</li>
+<li>时钟管理</li>
+<li>运行模式和低功耗模式<ul>
+<li>运行模式</li>
+<li>等待模式</li>
+<li>活跃停机模式</li>
+<li>停机模式</li>
+</ul>
+</li>
+<li>功耗与唤醒事件的测量与结果</li>
+<li>功耗管理要点</li>
+</ul>
+<h1 id="要点摘要"><a href="#要点摘要" class="headerlink" title="要点摘要"></a>要点摘要</h1><p><img src="http://img.blog.csdn.net/20150722200529329" alt="四种模式"></p>
+<p>&emsp;&emsp;停机模式(Halt)：此模式下单片机的功耗最低，振荡器，CPU和外设的时钟都被关闭，主电压调压器断电。可用复位或外部中断唤醒，唤醒后之前运行的寄存器数据等都保持不变，且从HALT处继续执行程序。</p>
+<pre><code>停机模式下的功耗测量结果（MVR关LPVR开）：
+</code></pre><p><img src="http://img.blog.csdn.net/20150722200628142" alt="停机模式下的功耗测量结果"></p>
+<pre><code>运行模式下的功耗测量结果（从RAM运行，不是从Flash开始）：
+</code></pre><p><img src="http://img.blog.csdn.net/20150722200703951" alt="运行模式下的功耗测量结果"></p>
+<pre><code>停机模式下的唤醒时间测量结果：
+</code></pre><p><img src="http://img.blog.csdn.net/20150722200731844" alt="停机模式下的唤醒时间测量结果"></p>
+<h1 id="测试程序"><a href="#测试程序" class="headerlink" title="测试程序"></a>测试程序</h1><pre><code>main.c
+</code></pre><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line">Function:	电源管理：停机(Halt)模式测试,没有进入停机模式前,四个LED</span><br><span class="line">					灯是每隔1秒钟亮灭一次的,超过10秒后,自动进入停机mode,</span><br><span class="line">					然后可以通过外部中断来唤醒停机,此时程序从停机位置</span><br><span class="line">					处继续往下运行。</span><br><span class="line">Date		:	2015年7月21日</span><br><span class="line">Note		:	STVD + COSMIC</span><br><span class="line">Author	:	yicm</span><br><span class="line">Version	:	0.0.9</span><br><span class="line">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stm8s003f3p.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*Output Pin*/</span></span><br><span class="line"><span class="keyword">_Bool</span> PA3 @PA_ODR:<span class="number">3</span>;</span><br><span class="line"><span class="keyword">_Bool</span> PC4 @PC_ODR:<span class="number">4</span>;</span><br><span class="line"><span class="keyword">_Bool</span> PC5 @PC_ODR:<span class="number">5</span>;</span><br><span class="line"><span class="keyword">_Bool</span> PC6 @PC_ODR:<span class="number">6</span>;</span><br><span class="line"><span class="keyword">_Bool</span> PC7 @PC_ODR:<span class="number">7</span>;</span><br><span class="line"><span class="comment">/*Input Pin*/</span></span><br><span class="line"><span class="keyword">_Bool</span> PC3	@PC_IDR:<span class="number">3</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*电量指示灯*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LED1 	PA3</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LED2 	PC5</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LED3 	PC6</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LED4 	PC7</span></span><br><span class="line"><span class="comment">/*按键指示灯*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LED5 	PC4</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> KEY		PC3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*主时钟频率为8Mhz*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_CLK</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	CLK_ICKR |= <span class="number">0X01</span>;</span><br><span class="line">	CLK_CKDIVR = <span class="number">0x08</span>;</span><br><span class="line">	<span class="keyword">while</span>(!(CLK_ICKR&amp;<span class="number">0x02</span>));</span><br><span class="line">	CLK_SWR=<span class="number">0xE1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_GPIO</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="comment">/*LED 配置为推挽输出*/</span></span><br><span class="line">	PA_DDR |= <span class="number">0X08</span>;		<span class="comment">//PA3</span></span><br><span class="line">	PA_CR1 |= <span class="number">0X08</span>;</span><br><span class="line">	PA_CR2 &amp;= <span class="number">0XF7</span>;</span><br><span class="line">	<span class="comment">/*PC4 -KEY LED*/</span></span><br><span class="line">	PC_DDR |= <span class="number">0X10</span>;</span><br><span class="line">	PC_CR1 |= <span class="number">0X10</span>;</span><br><span class="line">	PC_CR2 &amp;= <span class="number">0XEF</span>;</span><br><span class="line"></span><br><span class="line">	PC_DDR |= <span class="number">0XE0</span>;		<span class="comment">//PC5/6/7</span></span><br><span class="line">	PC_CR1 |= <span class="number">0XE0</span>;</span><br><span class="line">	PC_CR2 &amp;= <span class="number">0X1F</span>;</span><br><span class="line">	</span><br><span class="line">	LED1 = <span class="number">1</span>;LED2 = <span class="number">1</span>;LED3 = <span class="number">1</span>;LED4 = <span class="number">1</span>;LED5 = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_TIM1</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	TIM1_IER = <span class="number">0x00</span>;</span><br><span class="line">	TIM1_CR1 = <span class="number">0x00</span>;</span><br><span class="line"></span><br><span class="line">	TIM1_EGR |= <span class="number">0x01</span>;</span><br><span class="line">	TIM1_PSCRH = <span class="number">199</span>/<span class="number">256</span>; <span class="comment">// 8M系统时钟经预分频f=fck/(PSCR+1) TIM1 为16位分频器 </span></span><br><span class="line">	TIM1_PSCRL = <span class="number">199</span>%<span class="number">256</span>; <span class="comment">// PSCR=0x1F3F，f=8M/(0x1F3F+1)=1000Hz，每个计数周期1ms</span></span><br><span class="line">	 </span><br><span class="line">	TIM1_CNTRH = <span class="number">0x00</span>;</span><br><span class="line">	TIM1_CNTRL = <span class="number">0x00</span>;		</span><br><span class="line">	</span><br><span class="line">	TIM1_ARRH = <span class="number">400</span>/<span class="number">256</span>;  <span class="comment">// 自动重载寄存器ARR=0x01F4=500</span></span><br><span class="line">	TIM1_ARRL = <span class="number">400</span>%<span class="number">256</span>;  <span class="comment">// 每记数500次产生一次中断，即500ms</span></span><br><span class="line"></span><br><span class="line">	TIM1_CR1 |= <span class="number">0x81</span>;</span><br><span class="line">	TIM1_IER |= <span class="number">0x01</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*PC3设置为上拉输入*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_EXTI2_GPIO</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	PC_DDR &amp;= <span class="number">0XF7</span>; </span><br><span class="line">	PC_CR1 &amp;= <span class="number">0XF7</span>;</span><br><span class="line">	PC_CR2 |= <span class="number">0X08</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*上升沿和下降沿促发*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_EXTI2</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	EXTI_CR1 |= <span class="number">0x30</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">main()</span><br><span class="line">&#123;</span><br><span class="line">	_asm(<span class="string">"sim"</span>);</span><br><span class="line">	Init_CLK();</span><br><span class="line">	Init_GPIO();</span><br><span class="line">	Init_EXTI2_GPIO();</span><br><span class="line">	Init_EXTI2();</span><br><span class="line">	Init_TIM1();</span><br><span class="line">	_asm(<span class="string">"rim"</span>);</span><br><span class="line">	<span class="keyword">while</span> (<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*外部中断唤醒*/</span></span><br><span class="line">@far @<span class="function">interrupt <span class="keyword">void</span> <span class="title">EXTI2_Hand_Fun</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*定时器中断函数*/</span></span><br><span class="line">@far @<span class="function">interrupt <span class="keyword">void</span> <span class="title">TIM1_UPD_OVF_TRG_BRK_IRQHandler</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">static</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">	TIM1_SR1 &amp;=~(<span class="number">0x01</span>);</span><br><span class="line">	</span><br><span class="line">	++i;</span><br><span class="line">	<span class="keyword">if</span>(<span class="number">0</span> == (i%<span class="number">50</span>))</span><br><span class="line">	&#123;</span><br><span class="line">		LED1 = ~LED1;</span><br><span class="line">		LED2 = ~LED2;</span><br><span class="line">		LED3 = ~LED3;</span><br><span class="line">		LED4 = ~LED4;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(i &gt; <span class="number">1000</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		_asm(<span class="string">"halt"</span>);</span><br><span class="line">		i = <span class="number">0</span>;</span><br><span class="line">		LED5 = ~LED5;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code>stm8_interrupt_vector.c
+</code></pre><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*	BASIC INTERRUPT VECTOR TABLE FOR STM8 devices</span><br><span class="line"> *	Copyright (c) 2007 STMicroelectronics</span><br><span class="line"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">void</span> @far (*<span class="keyword">interrupt_handler_t</span>)(<span class="keyword">void</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> interrupt_vector &#123;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> interrupt_instruction;</span><br><span class="line">	<span class="keyword">interrupt_handler_t</span> interrupt_handler;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">@far @<span class="function">interrupt <span class="keyword">void</span> <span class="title">NonHandledInterrupt</span> <span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="comment">/* in order to detect unexpected events during development, </span><br><span class="line">	   it is recommended to set a breakpoint on the following instruction</span><br><span class="line">	*/</span></span><br><span class="line">	<span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="keyword">void</span> _stext();     <span class="comment">/* startup routine */</span></span><br><span class="line"><span class="keyword">extern</span> @far @<span class="function">interrupt <span class="keyword">void</span> <span class="title">EXTI2_Hand_Fun</span><span class="params">(<span class="keyword">void</span>)</span></span>;</span><br><span class="line"><span class="keyword">extern</span> @far @<span class="function">interrupt <span class="keyword">void</span> <span class="title">TIM1_UPD_OVF_TRG_BRK_IRQHandler</span><span class="params">(<span class="keyword">void</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> interrupt_vector <span class="keyword">const</span> _vectab[] = &#123;</span><br><span class="line">	&#123;<span class="number">0x82</span>, (<span class="keyword">interrupt_handler_t</span>)_stext&#125;, <span class="comment">/* reset */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* trap  */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq0  */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq1  */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq2  */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq3  */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq4  */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, EXTI2_Hand_Fun&#125;, <span class="comment">/* irq5  */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq6  */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq7  */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq8  */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq9  */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq10 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, TIM1_UPD_OVF_TRG_BRK_IRQHandler&#125;, <span class="comment">/* irq11 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq12 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq13 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq14 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq15 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq16 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq17 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq18 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq19 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq20 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq21 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq22 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq23 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq24 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq25 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq26 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq27 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq28 */</span></span><br><span class="line">	&#123;<span class="number">0x82</span>, NonHandledInterrupt&#125;, <span class="comment">/* irq29 */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2015/07/22/stm8s-option-byte-io-multiplexed/" itemprop="url">
                   STM8S之选项字节(Option Byte)写操作之IO复用
                 </a>
@@ -1421,7 +1579,7 @@ extern @far @interrupt void TIM1_UPD_OVF_TRG_BRK_IRQHandler(void);
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
