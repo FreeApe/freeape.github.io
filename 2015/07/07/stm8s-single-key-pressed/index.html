@@ -85,18 +85,36 @@
 
 
 <meta name="description" content="详见博客：http://blog.csdn.net/freeape/article/details/46793457
-1 GPIO设置&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;STM8 I/O 口引脚配置表| Px_DDR |  Px_CR1 | P">
+1 GPIO设置&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;STM8 I/O 口引脚配置表
+
+
+
+Px_DDR
+Px_CR1
+Px_C">
 <meta property="og:type" content="article">
 <meta property="og:title" content="STM8S之独立按键IO口设置及按下事件问题">
 <meta property="og:url" content="http://yicm.me/2015/07/07/stm8s-single-key-pressed/index.html">
 <meta property="og:site_name" content="依成名的博客">
 <meta property="og:description" content="详见博客：http://blog.csdn.net/freeape/article/details/46793457
-1 GPIO设置&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;STM8 I/O 口引脚配置表| Px_DDR |  Px_CR1 | P">
-<meta property="og:updated_time" content="2016-09-05T17:33:18.735Z">
+1 GPIO设置&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;STM8 I/O 口引脚配置表
+
+
+
+Px_DDR
+Px_CR1
+Px_C">
+<meta property="og:updated_time" content="2016-09-05T17:41:52.544Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="STM8S之独立按键IO口设置及按下事件问题">
 <meta name="twitter:description" content="详见博客：http://blog.csdn.net/freeape/article/details/46793457
-1 GPIO设置&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;STM8 I/O 口引脚配置表| Px_DDR |  Px_CR1 | P">
+1 GPIO设置&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;STM8 I/O 口引脚配置表
+
+
+
+Px_DDR
+Px_CR1
+Px_C">
 
 
 
@@ -340,7 +358,70 @@
 
       
         <p>详见博客：<a href="http://blog.csdn.net/freeape/article/details/46793457" target="_blank" rel="external">http://blog.csdn.net/freeape/article/details/46793457</a></p>
-<h1 id="1-GPIO设置"><a href="#1-GPIO设置" class="headerlink" title="1 GPIO设置"></a>1 GPIO设置</h1><p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<strong>STM8 I/O 口引脚配置表</strong><br>| Px_DDR |  Px_CR1 | Px_CR2 | I/O 方式 | 引脚状态 |<br>| :————-: |:————-:| :—–:| :—–:|<br>| 0| 0| 0 |输入|悬浮输入|<br>| 0| 0| 1 |输入|上拉输入|<br>| 0| 1| 0 |输入|中断悬浮输入|<br>| 0| 1| 1 |输入|中断上拉输入|<br>| 1| 0| 0 |输出|开漏输出|<br>| 1| 1| 0 |输出|推挽输出|<br>| 1| x| 1 |输出|输出（最快速度为10MHZ）|<br>对STM8S的IO配置，我们只需要操作五个寄存器就行了：</p>
+<h1 id="1-GPIO设置"><a href="#1-GPIO设置" class="headerlink" title="1 GPIO设置"></a>1 GPIO设置</h1><p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<strong>STM8 I/O 口引脚配置表</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Px_DDR</th>
+<th style="text-align:center">Px_CR1</th>
+<th style="text-align:center">Px_CR2</th>
+<th style="text-align:center">I/O 方式</th>
+<th>引脚状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">输入</td>
+<td>悬浮输入</td>
+</tr>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">输入</td>
+<td>上拉输入</td>
+</tr>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">输入</td>
+<td>中断悬浮输入</td>
+</tr>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">输入</td>
+<td>中断上拉输入</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">输出</td>
+<td>开漏输出</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">输出</td>
+<td>推挽输出</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">x</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">输出</td>
+<td>输出（最快速度为10MHZ）</td>
+</tr>
+</tbody>
+</table>
+<p>对STM8S的IO配置，我们只需要操作五个寄存器就行了：</p>
 <ul>
 <li><strong>输出</strong>数据寄存器 (ODR)</li>
 <li><strong>输入</strong>数据寄存器 (IDR)</li>
