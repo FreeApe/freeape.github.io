@@ -1,0 +1,805 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="stm8s," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="详见博客：http://blog.csdn.net/freeape/article/details/46802003
+1 问题&amp;emsp;&amp;emsp;在下面的测试程序中，如果将Init_CLK()函数中的 CLK_CKDIVR |= 0x08;去掉’|‘，则TIM1的功能实现跟预设定相同（10ms中断一次），但是TIM2的PWM频率就变高了；如果加上，则TIM2的功能实现跟预设定相同（产生1Hz的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STM8S之TIM2产生PWM与TIM1定时器周期中断的时钟问题">
+<meta property="og:url" content="http://yicm.me/2015/07/08/stm8s-tim2-pwm-tim1-period-interupt/index.html">
+<meta property="og:site_name" content="依成名的博客">
+<meta property="og:description" content="详见博客：http://blog.csdn.net/freeape/article/details/46802003
+1 问题&amp;emsp;&amp;emsp;在下面的测试程序中，如果将Init_CLK()函数中的 CLK_CKDIVR |= 0x08;去掉’|‘，则TIM1的功能实现跟预设定相同（10ms中断一次），但是TIM2的PWM频率就变高了；如果加上，则TIM2的功能实现跟预设定相同（产生1Hz的">
+<meta property="og:updated_time" content="2016-09-05T17:23:22.561Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="STM8S之TIM2产生PWM与TIM1定时器周期中断的时钟问题">
+<meta name="twitter:description" content="详见博客：http://blog.csdn.net/freeape/article/details/46802003
+1 问题&amp;emsp;&amp;emsp;在下面的测试程序中，如果将Init_CLK()函数中的 CLK_CKDIVR |= 0x08;去掉’|‘，则TIM1的功能实现跟预设定相同（10ms中断一次），但是TIM2的PWM频率就变高了；如果加上，则TIM2的功能实现跟预设定相同（产生1Hz的">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> STM8S之TIM2产生PWM与TIM1定时器周期中断的时钟问题 | 依成名的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?8f6526fe53ee8a7814e4d1f267a37c28";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">依成名的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">---学无止境，折腾不止</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user-secret"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                STM8S之TIM2产生PWM与TIM1定时器周期中断的时钟问题
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-07-08T12:48:51+08:00" content="2015-07-08">
+              2015-07-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/硬件/" itemprop="url" rel="index">
+                    <span itemprop="name">硬件</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/07/08/stm8s-tim2-pwm-tim1-period-interupt/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/08/stm8s-tim2-pwm-tim1-period-interupt/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2015/07/08/stm8s-tim2-pwm-tim1-period-interupt/" class="leancloud_visitors" data-flag-title="STM8S之TIM2产生PWM与TIM1定时器周期中断的时钟问题">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>详见博客：<a href="http://blog.csdn.net/freeape/article/details/46802003" target="_blank" rel="external">http://blog.csdn.net/freeape/article/details/46802003</a></p>
+<h1 id="1-问题"><a href="#1-问题" class="headerlink" title="1 问题"></a>1 问题</h1><p>&emsp;&emsp;在下面的测试程序中，如果将Init_CLK()函数中的 CLK_CKDIVR <strong>|=</strong> 0x08;去掉’<strong>|</strong>‘，则TIM1的功能实现跟预设定相同（10ms中断一次），但是TIM2的PWM频率就变高了；如果加上，则TIM2的功能实现跟预设定相同（产生1Hz的PWM），但是TIM1的周期就变长了；<br>&emsp;&emsp;尝试了很多测试，均无效（买的开发板和另一块gs自画板测试也都一样）。</p>
+<h1 id="2-尝试"><a href="#2-尝试" class="headerlink" title="2 尝试"></a>2 尝试</h1><p>&emsp;&emsp;因为STM8S默认使用内部16M高速RC振荡器，且8分频，则系统启动主时钟为2M。即CLK_CKDIVR = 0X18;，如果再去赋值CLK_CKDIVR |= 0X08; 则主时钟还是不变即0X18，但是如果赋值为CLK_CKDIVR = 0X08;，则主时钟就会改变，变为8M。但是TIM1和TIM2的Fmaster时钟应该是一样的，这样的赋值应该会对TIM1和TIM2都会产生影响，但是两个赋值不同，实现功能的配置正确，而总只有一个能按预设定工作，这到底是怎么回事呢？<br>&emsp;&emsp;发现设置为CLK_CKDIVR = 0X08时（8M），TIM1能按预设定工作，而TIM2的工作频率却明显快了，像是快了一倍，带着这个发现，我就将现在的TIM2的Fmaster时钟频率当做为TIM1的一倍，即16M，再去重新配置TIM2的寄存器，再编译、下载进单片机，居然和TIM1实现的功能相同了。这又到底是怎么回事呢？<strong>难道TIM2的Fmaster时钟总是TIM1的Fmaster时钟的一倍吗？</strong>又去尝试几种不同的CLK_CKDIVR（当然则TIM1的Fmaster频率不能超过8M）。<br>&emsp;&emsp;接下来测试了 CLK_CKDIVR = 0X10;（4M）， CLK_CKDIVR = 0X18;（2M）均是如此。是不是猜想正确了，还是想不明白是怎么回事。看着STM8S的时钟树怎么也想不明白。</p>
+<h1 id="3-测试程序"><a href="#3-测试程序" class="headerlink" title="3 测试程序"></a>3 测试程序</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* MAIN.C file</span><br><span class="line">function	:	TIM1定时器周期中断实现LED1周期为2S的亮灭；TIM2用PWM波实现同样的功能；</span><br><span class="line">      TIM1 10ms定时器周期中断；</span><br><span class="line">      TIM2_CH3 PD2 输出周期为1Hz的PWM；</span><br><span class="line">problem	 :</span><br><span class="line">      (1) 在时钟初始化函数Init_CLK()里，|= 与=的问题，加上‘|’</span><br><span class="line">      与不加，TIM1和TIM2总有其中一个跟预期实现不一样。</span><br><span class="line"> */</span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stm8s003f3p.h&gt;</span></span></span><br><span class="line"><span class="keyword">_Bool</span> PD2 @PD_ODR:<span class="number">2</span>;</span><br><span class="line"><span class="keyword">_Bool</span> PC7 @PC_ODR:<span class="number">7</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LED1 PD2</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LED2 PC7</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_CLK</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line"> <span class="comment">//当是'|='时，实际CLK = 2M</span></span><br><span class="line"> <span class="comment">//当是' ='时，实际CLK = 8M</span></span><br><span class="line"> CLK_CKDIVR = <span class="number">0X08</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_GPIO</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line"> <span class="comment">/*LED/PWM 配置为推挽输出*/</span></span><br><span class="line"> PD_DDR |= <span class="number">0X04</span>;	 <span class="comment">//PD2--PWM输出---连接LED1</span></span><br><span class="line"> PD_CR1 |= <span class="number">0X04</span>;</span><br><span class="line"> PD_CR2 &amp;= <span class="number">0XFD</span>;</span><br><span class="line"> </span><br><span class="line"> PC_DDR |= <span class="number">0X80</span>;	 <span class="comment">//PC7---LED2;</span></span><br><span class="line"> PC_CR1 |= <span class="number">0X80</span>;</span><br><span class="line"> PC_CR2 &amp;= <span class="number">0X7F</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_TIM1</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line"> _asm(<span class="string">"sim"</span>);</span><br><span class="line"> TIM1_IER = <span class="number">0x00</span>;</span><br><span class="line"> TIM1_CR1 = <span class="number">0x00</span>;</span><br><span class="line"> TIM1_EGR |= <span class="number">0x01</span>;</span><br><span class="line"> TIM1_PSCRH = <span class="number">199</span>/<span class="number">256</span>; <span class="comment">//2M系统时钟经预分频f=fck/(PSCR+1) TIM1 为16位分频器</span></span><br><span class="line"> TIM1_PSCRL = <span class="number">199</span>%<span class="number">256</span>; <span class="comment">//f=8M/(199+1)=40000Hz，每个计数周期1ms</span></span><br><span class="line"> </span><br><span class="line"> TIM1_CNTRH = <span class="number">0x00</span>;</span><br><span class="line"> TIM1_CNTRL = <span class="number">0x00</span>;</span><br><span class="line"> </span><br><span class="line"> TIM1_ARRH = <span class="number">400</span>/<span class="number">256</span>;  <span class="comment">// 自动重载寄存器ARR=400</span></span><br><span class="line"> TIM1_ARRL = <span class="number">400</span>%<span class="number">256</span>;  <span class="comment">// 每记数400次产生一次中断，即10ms</span></span><br><span class="line"> TIM1_CR1 |= <span class="number">0x81</span>;</span><br><span class="line"> TIM1_IER |= <span class="number">0x01</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*TIM1---8M   TIM2---4M*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_TIM2</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line"> <span class="comment">//TIM2_IER = 0x00;	     //禁止各种中断</span></span><br><span class="line"> <span class="comment">//TIM2_EGR |= 0X01;	 //如果要 新的 预分频值生效，必须产生更新事件</span></span><br><span class="line"> </span><br><span class="line"> TIM2_CCMR3 |=	<span class="number">0X60</span>;    <span class="comment">//设置定时器2三通道(PD2)输出比较三模式</span></span><br><span class="line"> TIM2_CCMR3 |= <span class="number">0X08</span>;	 <span class="comment">//输出比较3预装载使能</span></span><br><span class="line"> </span><br><span class="line"> TIM2_CCER2 |= <span class="number">0x03</span>;	 <span class="comment">//通道3使能，低电平有效，配置为输出</span></span><br><span class="line"> </span><br><span class="line"> <span class="comment">//初始化时钟分频器为1，即计数器的时钟频率为Fmaster=8M/128=0.0625MHZ</span></span><br><span class="line"> TIM2_PSCR = <span class="number">0X07</span>;</span><br><span class="line"> <span class="comment">//初始化自动装载寄存器，决定PWM 方波的频率，Fpwm=0.0625M/62500=1HZ</span></span><br><span class="line"> TIM2_ARRH = <span class="number">62500</span>/<span class="number">256</span>;</span><br><span class="line"> TIM2_ARRL = <span class="number">62500</span>%<span class="number">256</span>;</span><br><span class="line"> <span class="comment">//初始化比较寄存器，决定PWM 方波的占空比：50%</span></span><br><span class="line"> TIM2_CCR3H = <span class="number">31250</span>/<span class="number">256</span>;</span><br><span class="line"> TIM2_CCR3L = <span class="number">31250</span>%<span class="number">256</span>;</span><br><span class="line"> <span class="comment">//启动计数;更新中断失能</span></span><br><span class="line"> TIM2_CR1 = <span class="number">0x01</span>;</span><br><span class="line">&#125;</span><br><span class="line">main()</span><br><span class="line">&#123;</span><br><span class="line"> Init_CLK();</span><br><span class="line"> Init_GPIO();</span><br><span class="line"> Init_TIM1();</span><br><span class="line"> Init_TIM2();</span><br><span class="line"> LED1 = <span class="number">1</span>;LED2 = <span class="number">1</span>;</span><br><span class="line"> _asm(<span class="string">"rim"</span>);</span><br><span class="line"> <span class="keyword">while</span> (<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line">@far @<span class="function">interrupt <span class="keyword">void</span> <span class="title">TIM1_UPD_OVF_TRG_BRK_IRQHandler</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line"> <span class="keyword">static</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line"> </span><br><span class="line"> TIM1_SR1 &amp;=~(<span class="number">0x01</span>);</span><br><span class="line"> ++i;</span><br><span class="line"> <span class="keyword">if</span>(<span class="number">100</span> == i)&#123;</span><br><span class="line">  LED2 = ~LED2;</span><br><span class="line">  i = <span class="number">0</span>;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/stm8s/" rel="tag">#stm8s</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/07/06/stm8s-timer-pwm/" rel="next" title="STM8S之定时器产生PWM（TIM2）">
+                <i class="fa fa-chevron-left"></i> STM8S之定时器产生PWM（TIM2）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/11/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2015/07/08/stm8s-tim2-pwm-tim1-period-interupt/"
+     data-title="STM8S之TIM2产生PWM与TIM1定时器周期中断的时钟问题"
+     data-content=""
+     data-url="http://yicm.me/2015/07/08/stm8s-tim2-pwm-tim1-period-interupt/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/07/08/stm8s-tim2-pwm-tim1-period-interupt/"
+           data-title="STM8S之TIM2产生PWM与TIM1定时器周期中断的时钟问题" data-url="http://yicm.me/2015/07/08/stm8s-tim2-pwm-tim1-period-interupt/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/avatar/avatar.jpg"
+               alt="依成名" />
+          <p class="site-author-name" itemprop="name">依成名</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/freeape" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/freeape" target="_blank" title="CSDN">
+                  
+                    <i class="fa fa-fw fa-angellist"></i>
+                  
+                  CSDN
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/huangyi520forever" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-问题"><span class="nav-number">1.</span> <span class="nav-text">1 问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-尝试"><span class="nav-number">2.</span> <span class="nav-text">2 尝试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-测试程序"><span class="nav-number">3.</span> <span class="nav-text">3 测试程序</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">依成名</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"freeape"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("JhJdKepwexwAupA0SXBWX6QQ-gzGzoHsz", "jbRztzIopC6OGVNrRWXw8SUf");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>
