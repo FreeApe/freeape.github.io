@@ -1,0 +1,1055 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="无人机,pixhawk," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="详见博客：http://blog.csdn.net/freeape/article/details/46880637
+The Instructions of uORB『PX4/Pixhawk』 &amp;ensp; 『软件体系结构』&amp;ensp;『uORB』&amp;ensp;『主题发布』&amp;ensp;『主题订阅』
+1 简介1.1 PX4/Pixhawk的软件体系结构&amp;emsp;PX4/Pixhawk的软件体系结构主">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PX4/Pixhawk之uORB深入理解和应用">
+<meta property="og:url" content="http://yicm.me/2015/07/14/pixhawk-uorb-understand-application/index.html">
+<meta property="og:site_name" content="依成名的博客">
+<meta property="og:description" content="详见博客：http://blog.csdn.net/freeape/article/details/46880637
+The Instructions of uORB『PX4/Pixhawk』 &amp;ensp; 『软件体系结构』&amp;ensp;『uORB』&amp;ensp;『主题发布』&amp;ensp;『主题订阅』
+1 简介1.1 PX4/Pixhawk的软件体系结构&amp;emsp;PX4/Pixhawk的软件体系结构主">
+<meta property="og:image" content="http://img.blog.csdn.net/20150714165857871">
+<meta property="og:image" content="http://img.blog.csdn.net/20150714165954421">
+<meta property="og:image" content="http://img.blog.csdn.net/20150714170015797">
+<meta property="og:image" content="http://img.blog.csdn.net/20150714170051994">
+<meta property="og:updated_time" content="2016-09-06T16:01:42.781Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PX4/Pixhawk之uORB深入理解和应用">
+<meta name="twitter:description" content="详见博客：http://blog.csdn.net/freeape/article/details/46880637
+The Instructions of uORB『PX4/Pixhawk』 &amp;ensp; 『软件体系结构』&amp;ensp;『uORB』&amp;ensp;『主题发布』&amp;ensp;『主题订阅』
+1 简介1.1 PX4/Pixhawk的软件体系结构&amp;emsp;PX4/Pixhawk的软件体系结构主">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20150714165857871">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> PX4/Pixhawk之uORB深入理解和应用 | 依成名的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?8f6526fe53ee8a7814e4d1f267a37c28";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">依成名的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">---学无止境，折腾不止</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user-secret"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                PX4/Pixhawk之uORB深入理解和应用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-07-14T17:04:51+08:00" content="2015-07-14">
+              2015-07-14
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/无人机/" itemprop="url" rel="index">
+                    <span itemprop="name">无人机</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/07/14/pixhawk-uorb-understand-application/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/14/pixhawk-uorb-understand-application/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2015/07/14/pixhawk-uorb-understand-application/" class="leancloud_visitors" data-flag-title="PX4/Pixhawk之uORB深入理解和应用">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>详见博客：<a href="http://blog.csdn.net/freeape/article/details/46880637" target="_blank" rel="external">http://blog.csdn.net/freeape/article/details/46880637</a></p>
+<h2 id="The-Instructions-of-uORB"><a href="#The-Instructions-of-uORB" class="headerlink" title="The Instructions of uORB"></a>The Instructions of uORB</h2><p><strong><code>『PX4/Pixhawk』</code> &ensp; <code>『软件体系结构』</code>&ensp;<code>『uORB』</code>&ensp;<code>『主题发布』</code>&ensp;<code>『主题订阅』</code></strong></p>
+<h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1 简介"></a>1 简介</h3><h5 id="1-1-PX4-Pixhawk的软件体系结构"><a href="#1-1-PX4-Pixhawk的软件体系结构" class="headerlink" title="1.1 PX4/Pixhawk的软件体系结构"></a>1.1 PX4/Pixhawk的软件体系结构</h5><p>&emsp;PX4/Pixhawk的软件体系结构主要被分为四个层次，这可以让我们更好的理解PX4/Pixhawk的软件架构和运作：</p>
+<ul>
+<li>应用程序的API：这个接口提供给应用程序开发人员，此API旨在尽可能的精简、扁平及隐藏其复杂性。</li>
+<li>应用程序框架: 这是为操作基础飞行控制的默认程序集（节点）。</li>
+<li>库: 这一层包含了所有的系统库和基本交通控制的函数。</li>
+<li>操作系统: 最后一层提供硬件驱动程序，网络，UAVCAN和故障安全系统。</li>
+</ul>
+<p><img src="http://img.blog.csdn.net/20150714165857871" alt="PX4/Pixhawk软件体系结构"><br>&emsp;&emsp;uORB(Micro Object Request Broker,微对象请求代理器)是PX4/Pixhawk系统中非常重要且关键的一个模块，它肩负了整个系统的数据传输任务，所有的传感器数据、GPS、PPM信号等都要从芯片获取后通过uORB进行传输到各个模块进行计算处理。实际上uORB是一套跨「<code>进程</code>」 的IPC通讯模块。在Pixhawk中， 所有的功能被独立以进程模块为单位进行实现并工作。而进程间的数据交互就由为重要，必须要能够符合实时、有序的特点。<br>&emsp;&emsp;Pixhawk使用的是NuttX实时ARM系统，uORB实际上是多个进程打开同一个设备文件，进程间通过此文件节点进行数据交互和共享。进程通过命名的「<code>总线</code>」交换的消息称之为「<code>主题</code>」(topic)，在Pixhawk 中，一个主题仅包含一种消息类型，通俗点就是数据类型。每个进程可以「<code>订阅</code>」或者「<code>发布</code>」主题，可以存在多个发布者，或者一个进程可以订阅多个主题，但是一条总线上始终只有一条消息。</p>
+<h5 id="1-2-PX4-Pixhawk应用程序框架"><a href="#1-2-PX4-Pixhawk应用程序框架" class="headerlink" title="1.2 PX4/Pixhawk应用程序框架"></a>1.2 PX4/Pixhawk应用程序框架</h5><p><img src="http://img.blog.csdn.net/20150714165954421" alt="PX4应用程序框架"></p>
+<p>&emsp;&emsp;应用层中操作基础飞行的应用之间都是隔离的，这样提供了一种安保模式，以确保基础操作独立的高级别系统状态的稳定性。而沟通它们的就是uORB。</p>
+<h3 id="2-uORB文件夹说明"><a href="#2-uORB文件夹说明" class="headerlink" title="2 uORB文件夹说明"></a>2 uORB文件夹说明</h3><h5 id="2-1-uORB文件夹结构"><a href="#2-1-uORB文件夹结构" class="headerlink" title="2.1 uORB文件夹结构"></a>2.1 uORB文件夹结构</h5><p><img src="http://img.blog.csdn.net/20150714170015797" alt="uORB文件夹结构"></p>
+<h5 id="2-2-文件-目录说明"><a href="#2-2-文件-目录说明" class="headerlink" title="2.2 文件/目录说明"></a>2.2 文件/目录说明</h5><blockquote>
+<p>topics : 系统通用接口定义的标准主题,比如电池电量转态、GPS的位置参数等<br>module.mk : uORB模块makefile文件<br><strong>objects_common.cpp</strong>: 通用接口标准主题定义集合，如添加新主题在这里定义<br>ORBMap.hpp : 对象请求器节点链表管理（驱动节点）<br>ORBSet.hpp : 对象请求器节点管理（非驱动节点）<br>Publication.cpp : 在不同的发布中遍历使用<br>Publication.hpp : 在不同的发布中遍历使用<br>Subscription.cpp : 在不同的订阅中遍历使用<br>Subscription.hpp : 在不同的订阅中遍历使用<br><strong>uORB.cpp : uORB的实现</strong><br><strong>uORB.h : uORB头文件</strong><br>uORBCommon.hpp : uORB公共部分变量定义实现<br>uORBCommunicator.hpp : 远程订阅的接口实现，实现了对不同的通信通道管理，如添加/移除订阅者，可以基于TCP/IP或fastRPC;传递给通信链路的实现，以提供在信道上接收消息的回调。<br>uORBDevices.hpp :<br>uORBDevices_nuttx.cpp : 节点操作，close,open,read,write<br>uORBDevices_nuttx.hpp :<br>uORBDevices_posix.cpp :<br>uORBDevices_posix.hpp :<br><strong>uORBMain.cpp : uORB入口</strong><br>uORBManager.hpp : uORB功能函数实现头文件<br>uORBManager_nuttx.cpp : uORB功能函数实现(Nuttx)<br>uORBManager_posix.cpp : uORB功能函数实现(Posix)<br>uORBTest_UnitTest.cpp : uORB测试<br>uORBTest_UnitTest.hpp : uORB测试头文件，包括主题定义和声明等<br>uORBUtiles.cpp :<br>uORBUtiles.hpp : </p>
+</blockquote>
+<h3 id="3-常用函数功能解析"><a href="#3-常用函数功能解析" class="headerlink" title="3 常用函数功能解析"></a>3 常用函数功能解析</h3><p><strong><code>int poll(struct pollfd fds[], nfds_t nfds, int timeout)</code></strong></p>
+<pre><code>功能：监控文件描述符（多个）；
+说明：timemout=0,poll()函数立即返回而不阻塞；timeout=INFTIM(-1),poll()会一直阻塞下去，直到检测到return &gt; 0；
+参数：
+    fds:struct pollfd结构类型的数组；
+    nfds:用于标记数组fds中的结构体元素的总数量；
+    timeout:是poll函数调用阻塞的时间，单位：毫秒；
+返回值：
+    &gt;0：数组fds中准备好读、写或出错状态的那些socket描述符的总数量；
+    ==0:poll()函数会阻塞timeout所指定的毫秒时间长度之后返回;
+    -1:poll函数调用失败；同时会自动设置全局变量errno；
+</code></pre><p><strong><code>int orb_subscribe(const struct orb_metadata *meta)</code></strong></p>
+<pre><code>功能：订阅主题（topic）;
+说明：即使订阅的主题没有被公告，但是也能订阅成功；但是在这种情况下，却得不到数据，直到主题被公告；
+参数：
+    meta:uORB元对象，可以认为是主题id，一般是通过ORB_ID(主题名)来赋值；
+返回值：
+    错误则返回ERROR;成功则返回一个可以读取数据、更新话题的句柄；如果待订阅的主题没有定义或声明则会返回-1，然后会将errno赋值为ENOENT;
+eg:
+    int fd = orb_subscribe(ORB_ID(topicName));
+</code></pre><p><strong><code>int orb_copy(const struct orb_metadata *meta, int handle, void *buffer)</code></strong></p>
+<pre><code>功能：从订阅的主题中获取数据并将数据保存到buffer中；
+参数：
+    meta:uORB元对象，可以认为是主题id，一般是通过ORB_ID(主题名)来赋值;
+    handle:订阅主题返回的句柄；
+    buffer:从主题中获取的数据；
+返回值：
+    返回OK表示获取数据成功，错误返回ERROR;否则则有根据的去设置errno;
+eg:
+    struct sensor_combined_s raw;
+    orb_copy(ORB_ID(sensor_combined), sensor_sub_fd, &amp;raw);
+</code></pre><p><strong><code>orb_advert_t orb_advertise(const struct orb_metadata *meta, const void *data)</code></strong></p>
+<pre><code>功能：公告发布者的主题；
+说明：在发布主题之前是必须的；否则订阅者虽然能订阅，但是得不到数据；
+参数：
+    meta:uORB元对象，可以认为是主题id，一般是通过ORB_ID(主题名)来赋值;
+    data:指向一个已被初始化，发布者要发布的数据存储变量的指针；
+返回值：错误则返回ERROR;成功则返回一个可以发布主题的句柄；如果待发布的主题没有定义或声明则会返回-1，然后会将errno赋值为ENOENT;
+eg:
+    struct vehicle_attitude_s att;
+    memset(&amp;att, 0, sizeof(att));
+    int att_pub_fd = orb_advertise(ORB_ID(vehicle_attitude), &amp;att);
+</code></pre><p><strong><code>int orb_publish(const struct orb_metadata *meta, orb_advert_t handle, const void *data)</code></strong></p>
+<pre><code>功能：发布新数据到主题；
+参数：
+    meta:uORB元对象，可以认为是主题id，一般是通过ORB_ID(主题名)来赋值;
+    handle:orb_advertise函数返回的句柄；
+    data:指向待发布数据的指针；
+返回值：OK表示成功；错误返回ERROR；否则则有根据的去设置errno;
+eg: 
+    orb_publish(ORB_ID(vehicle_attitude), att_pub_fd, &amp;att);
+</code></pre><p><strong><code>int orb_set_interval(int handle, unsigned interval)</code></strong></p>
+<pre><code>功能：设置订阅的最小时间间隔；
+说明：如果设置了，则在这间隔内发布的数据将订阅不到；需要注意的是，设置后，第一次的数据订阅还是由起初设置的频率来获取，
+参数：
+    handle:orb_subscribe函数返回的句柄；
+    interval:间隔时间，单位ms;
+返回值：OK表示成功；错误返回ERROR；否则则有根据的去设置errno;
+eg:
+    orb_set_interval(sensor_sub_fd, 1000);
+</code></pre><p><strong><code>orb_advert_t orb_advertise_multi(const struct orb_metadata *meta, const void *data, int *instance, int priority)</code></strong></p>
+<pre><code>功能：设备/驱动器的多个实例实现公告，利用此函数可以注册多个类似的驱动程序；
+说明：例如在飞行器中有多个相同的传感器，那他们的数据类型则类似，不必要注册几个不同的话题；
+参数：
+    meta:uORB元对象，可以认为是主题id，一般是通过ORB_ID(主题名)来赋值;
+    data:指向一个已被初始化，发布者要发布的数据存储变量的指针；
+    instance:整型指针，指向实例的ID（从0开始）；
+    priority:实例的优先级。如果用户订阅多个实例，优先级的设定可以使用户使用优先级高的最优数据源；
+返回值：
+    错误则返回ERROR;成功则返回一个可以发布主题的句柄；如果待发布的主题没有定义或声明则会返回-1，然后会将errno赋值为ENOENT;
+eg:
+    struct orb_test t;
+    t.val = 0;
+    int instance0;
+    orb_advert_t pfd0 = orb_advertise_multi(ORB_ID(orb_multitest), &amp;t, &amp;instance0, ORB_PRIO_MAX);
+</code></pre><p><strong><code>int    orb_subscribe_multi(const struct orb_metadata *meta, unsigned instance)</code></strong></p>
+<pre><code>功能：订阅主题（topic）;
+说明：通过实例的ID索引来确定是主题的哪个实例；
+参数：
+    meta:uORB元对象，可以认为是主题id，一般是通过ORB_ID(主题名)来赋值;
+    instance:主题实例ID;实例ID=0与orb_subscribe()实现相同；
+返回值：
+    错误则返回ERROR;成功则返回一个可以读取数据、更新话题的句柄；如果待订阅的主题没有定义或声明则会返回-1，然后会将errno赋值为ENOENT;
+eg:
+    int sfd1 = orb_subscribe_multi(ORB_ID(orb_multitest), 1);
+</code></pre><p><strong><code>int orb_unsubscribe(int handle)</code></strong></p>
+<pre><code>功能：取消订阅主题；
+参数：
+    handle:主题句柄；
+返回值：
+    OK表示成功；错误返回ERROR;否则则有根据的去设置errno;
+eg:
+    ret = orb_unsubscribe(handle);
+</code></pre><p><strong><code>int orb_check(int handle, bool *updated)</code></strong></p>
+<pre><code>功能：订阅者可以用来检查一个主题在发布者上一次更新数据后，有没有订阅者调用过ob_copy来接收、处理过；
+说明：如果主题在在被公告前就有人订阅，那么这个API将返回“not-updated”直到主题被公告。可以不用poll，只用这个函数实现数据的获取。
+参数：
+    handle:主题句柄；
+    updated:如果当最后一次更新的数据被获取了，检测到并设置updated为ture;
+返回值：
+    OK表示检测成功；错误返回ERROR;否则则有根据的去设置errno;
+eg:
+    if (PX4_OK != orb_check(sfd, &amp;updated)) {
+        return printf(&quot;check(1) failed&quot;);
+    }
+    if (updated) {
+        return printf(&quot;spurious updated flag&quot;);
+    }
+
+    //or
+
+    bool updated;
+    struct random_integer_data rd;
+
+    /* check to see whether the topic has updated since the last time we read it */
+    orb_check(topic_handle, &amp;updated);
+
+    if (updated) {
+        /* make a local copy of the updated data structure */
+        orb_copy(ORB_ID(random_integer), topic_handle, &amp;rd);
+        printf(&quot;Random integer is now %d\n&quot;, rd.r);
+    }
+</code></pre><p><strong><code>int orb_stat(int handle, uint64_t *time)</code></strong></p>
+<pre><code>功能：订阅者可以用来检查一个主题最后的发布时间；
+参数：
+    handle:主题句柄；
+    time:存放主题最后发布的时间；0表示该主题没有发布或公告；
+返回值：
+    OK表示检测成功；错误返回ERROR;否则则有根据的去设置errno;
+eg:
+    ret = orb_stat(handle,time);
+</code></pre><p><strong><code>int orb_exists(const struct orb_metadata *meta, int instance)</code></strong></p>
+<pre><code>功能：检测一个主题是否存在；
+参数：
+    meta:uORB元对象，可以认为是主题id，一般是通过ORB_ID(主题名)来赋值;
+    instance:ORB 实例ID;
+返回值：
+    OK表示检测成功；错误返回ERROR;否则则有根据的去设置errno;
+eg:
+    ret = orb_exists(ORB_ID(vehicle_attitude),0);
+</code></pre><p><strong><code>int orb_priority(int handle, int *priority)</code></strong></p>
+<pre><code>功能：获取主题优先级别；
+参数：
+    handle:主题句柄；
+    priority:存放获取的优先级别；
+返回值：
+    OK表示检测成功；错误返回ERROR;否则则有根据的去设置errno;
+eg:
+    ret = orb_priority(handle,&amp;priority);
+</code></pre><h3 id="4-例程"><a href="#4-例程" class="headerlink" title="4 例程"></a>4 例程</h3><h5 id="4-1-例程前准备工作"><a href="#4-1-例程前准备工作" class="headerlink" title="4.1 例程前准备工作"></a>4.1 例程前准备工作</h5><ul>
+<li><p>archives已编译完成(<strong>注：<a href="http://blog.csdn.net/freeape/article/details/49024053" target="_blank" rel="external">2015/10/6号后改为cmake编译系统，不再需要编译archives了</a></strong>)；</p>
+</li>
+<li><p>添加一个新的模块</p>
+<ul>
+<li>在Firmware/src/modules中添加一个新的文件夹，命名为px4_simple_app</li>
+<li>在px4_simple_app文件夹中创建module.mk文件，并输入以下内容：<ul>
+<li>MODULE_COMMAND    = px4_simple_app</li>
+<li>SRCS                = px4_simple_app.c</li>
+</ul>
+</li>
+<li>在px4_simple_app文件夹中创建px4_simple_app.c文件</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * @file px4_simple_app.c</span><br><span class="line"> * Minimal application example for PX4 autopilot.</span><br><span class="line"> */</span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;nuttx/config.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;errno.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line">__<span class="function">EXPORT <span class="keyword">int</span> <span class="title">px4_simple_app_main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span>;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">px4_simple_app_main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"Hello Sky!\n"</span>);</span><br><span class="line">	<span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>注册新添加的应用到NuttShell中，并编译上传<ul>
+<li>Firmware/makefiles/config_px4fmu-v2_default.mk文件中添加如下内容：<ul>
+<li>MODULES        += modules/px4_simple_app</li>
+</ul>
+</li>
+<li>编译<ul>
+<li>make clean</li>
+<li>make px4fmu-v2_default</li>
+</ul>
+</li>
+<li>上传到板子中<ul>
+<li>make upload px4fmu-v2_default</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>在QGC 中的Terminal(终端)中运行新应用<ul>
+<li>nsh &gt; px4_simple_app</li>
+</ul>
+</li>
+</ul>
+<p><em>&emsp;接下来的代码修改均是基于此应用。</em></p>
+<h5 id="4-2-订阅主题"><a href="#4-2-订阅主题" class="headerlink" title="4.2 订阅主题"></a>4.2 订阅主题</h5><p>&emsp;<strong><code>sensor_combined</code></strong>主题是官方提供的通用接口标准主题。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * @file px4_simple_app.c</span><br><span class="line"> * Minimal application example for PX4 autopilot</span><br><span class="line"> */</span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;nuttx/config.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;poll.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;uORB/uORB.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;uORB/topics/sensor_combined.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line">__<span class="function">EXPORT <span class="keyword">int</span> <span class="title">px4_simple_app_main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span>;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">px4_simple_app_main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"Hello Sky!\n"</span>);</span><br><span class="line"> </span><br><span class="line">	<span class="comment">/*订阅sensor_combined 主题*/</span></span><br><span class="line">	<span class="keyword">int</span> sensor_sub_fd = orb_subscribe(ORB_ID(sensor_combined));</span><br><span class="line"> </span><br><span class="line">	 <span class="comment">/*一个应用可以等待多个主题，在这里只等待一个主题*/</span></span><br><span class="line">	<span class="keyword">struct</span> pollfd fds[] = &#123;</span><br><span class="line">		&#123; .fd = sensor_sub_fd,   .events = POLLIN &#125;,</span><br><span class="line">		<span class="comment">/* 这里可以添加更多的文件描述符；</span><br><span class="line">		 * &#123; .fd = other_sub_fd,   .events = POLLIN &#125;,</span><br><span class="line">		 */</span></span><br><span class="line">	&#125;;</span><br><span class="line"> </span><br><span class="line">	<span class="keyword">int</span> error_counter = <span class="number">0</span>;</span><br><span class="line"> </span><br><span class="line">	<span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">		<span class="comment">/*poll函数调用阻塞的时间为1s*/</span></span><br><span class="line">		<span class="keyword">int</span> poll_ret = poll(fds, <span class="number">1</span>, <span class="number">1000</span>);</span><br><span class="line"> </span><br><span class="line">		<span class="comment">/*处理poll返回的结果 */</span></span><br><span class="line">		<span class="keyword">if</span> (poll_ret == <span class="number">0</span>) &#123;</span><br><span class="line">			<span class="comment">/* 这表示时间溢出了，在1s内没有获取到发布者的数据 */</span></span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"[px4_simple_app] Got no data within a second\n"</span>);</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (poll_ret &lt; <span class="number">0</span>) &#123;</span><br><span class="line">			<span class="comment">/* 出现问题 */</span></span><br><span class="line">			<span class="keyword">if</span> (error_counter &lt; <span class="number">10</span> || error_counter % <span class="number">50</span> == <span class="number">0</span>) &#123;</span><br><span class="line">				<span class="comment">/* use a counter to prevent flooding (and slowing us down) */</span></span><br><span class="line">				<span class="built_in">printf</span>(<span class="string">"[px4_simple_app] ERROR return value from poll(): %d\n"</span></span><br><span class="line">					, poll_ret);</span><br><span class="line">			&#125;</span><br><span class="line">			error_counter++;</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"> </span><br><span class="line">			<span class="keyword">if</span> (fds[<span class="number">0</span>].revents &amp; POLLIN) &#123;</span><br><span class="line">				<span class="comment">/*从文件描述符中获取订阅的数据*/</span></span><br><span class="line">				<span class="keyword">struct</span> sensor_combined_s raw;</span><br><span class="line">				<span class="comment">/* copy sensors raw data into local buffer */</span></span><br><span class="line">				orb_copy(ORB_ID(sensor_combined), sensor_sub_fd, &amp;raw);</span><br><span class="line">				<span class="built_in">printf</span>(<span class="string">"[px4_simple_app] Accelerometer:\t%8.4f\t%8.4f\t%8.4f\n"</span>,</span><br><span class="line">					(<span class="keyword">double</span>)raw.accelerometer_m_s2[<span class="number">0</span>],</span><br><span class="line">					(<span class="keyword">double</span>)raw.accelerometer_m_s2[<span class="number">1</span>],</span><br><span class="line">					(<span class="keyword">double</span>)raw.accelerometer_m_s2[<span class="number">2</span>]);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">/* 如果有更多的文件描述符，可以这样：</span><br><span class="line">			 * if (fds[1..n].revents &amp; POLLIN) &#123;&#125;</span><br><span class="line">			 */</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code>测试需要在QGC终端启动uORB和初始化该传感器，最后运行应用：
+    nsh &gt; uorb start
+    nsh &gt; sh /etc/init.d/rc.sensors
+    nsh &gt; px4_simple_app &amp;
+</code></pre><h5 id="4-3-订阅和发布主题"><a href="#4-3-订阅和发布主题" class="headerlink" title="4.3 订阅和发布主题"></a>4.3 订阅和发布主题</h5><p>&emsp;<strong><code>sensor_combined</code></strong>主题是官方提供的通用接口标准主题。<br>&emsp;<strong><code>vehicle_attitude</code></strong>主题是官方提供的通用接口标准主题。</p>
+<p>&emsp;程序流程图如下：</p>
+<p><img src="http://img.blog.csdn.net/20150714170051994" alt="pub_sub_test"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * @file px4_simple_app.c</span><br><span class="line"> * Minimal application example for PX4 autopilot</span><br><span class="line"> */</span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;nuttx/config.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;poll.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;uORB/uORB.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;uORB/topics/sensor_combined.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;uORB/topics/vehicle_attitude.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line">__<span class="function">EXPORT <span class="keyword">int</span> <span class="title">px4_simple_app_main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span>;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">px4_simple_app_main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"Hello Sky!\n"</span>);</span><br><span class="line"> </span><br><span class="line">	<span class="comment">/* 订阅 sensor_combined 主题 */</span></span><br><span class="line">	<span class="keyword">int</span> sensor_sub_fd = orb_subscribe(ORB_ID(sensor_combined));</span><br><span class="line">	orb_set_interval(sensor_sub_fd, <span class="number">1000</span>);</span><br><span class="line"> </span><br><span class="line">	<span class="comment">/* 公告 attitude 主题 */</span></span><br><span class="line">	<span class="keyword">struct</span> vehicle_attitude_s att;</span><br><span class="line">	<span class="built_in">memset</span>(&amp;att, <span class="number">0</span>, <span class="keyword">sizeof</span>(att));</span><br><span class="line">	<span class="keyword">int</span> att_pub_fd = orb_advertise(ORB_ID(vehicle_attitude), &amp;att);</span><br><span class="line"> </span><br><span class="line">	<span class="comment">/*一个应用可以等待多个主题，在这里只等待一个主题*/</span></span><br><span class="line">	<span class="keyword">struct</span> pollfd fds[] = &#123;</span><br><span class="line">		&#123; .fd = sensor_sub_fd,   .events = POLLIN &#125;,</span><br><span class="line">		<span class="comment">/* there could be more file descriptors here, in the form like:</span><br><span class="line">		 * &#123; .fd = other_sub_fd,   .events = POLLIN &#125;,</span><br><span class="line">		 */</span></span><br><span class="line">	&#125;;</span><br><span class="line"> </span><br><span class="line">	<span class="keyword">int</span> error_counter = <span class="number">0</span>;</span><br><span class="line"> </span><br><span class="line">	<span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">		<span class="comment">/* wait for sensor update of 1 file descriptor for 1000 ms (1 second) */</span></span><br><span class="line">		<span class="keyword">int</span> poll_ret = poll(fds, <span class="number">1</span>, <span class="number">1000</span>);</span><br><span class="line"> </span><br><span class="line">		<span class="comment">/* handle the poll result */</span></span><br><span class="line">		<span class="keyword">if</span> (poll_ret == <span class="number">0</span>) &#123;</span><br><span class="line">			<span class="comment">/* this means none of our providers is giving us data */</span></span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"[px4_simple_app] Got no data within a second\n"</span>);</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (poll_ret &lt; <span class="number">0</span>) &#123;</span><br><span class="line">			<span class="comment">/* this is seriously bad - should be an emergency */</span></span><br><span class="line">			<span class="keyword">if</span> (error_counter &lt; <span class="number">10</span> || error_counter % <span class="number">50</span> == <span class="number">0</span>) &#123;</span><br><span class="line">				<span class="comment">/* use a counter to prevent flooding (and slowing us down) */</span></span><br><span class="line">				<span class="built_in">printf</span>(<span class="string">"[px4_simple_app] ERROR return value from poll(): %d\n"</span></span><br><span class="line">					, poll_ret);</span><br><span class="line">			&#125;</span><br><span class="line">			error_counter++;</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"> </span><br><span class="line">			<span class="keyword">if</span> (fds[<span class="number">0</span>].revents &amp; POLLIN) &#123;</span><br><span class="line">				<span class="comment">/* obtained data for the first file descriptor */</span></span><br><span class="line">				<span class="keyword">struct</span> sensor_combined_s raw;</span><br><span class="line">				<span class="comment">/* copy sensors raw data into local buffer */</span></span><br><span class="line">				orb_copy(ORB_ID(sensor_combined), sensor_sub_fd, &amp;raw);</span><br><span class="line">				<span class="built_in">printf</span>(<span class="string">"[px4_simple_app] Accelerometer:\t%8.4f\t%8.4f\t%8.4f\n"</span>,</span><br><span class="line">					(<span class="keyword">double</span>)raw.accelerometer_m_s2[<span class="number">0</span>],</span><br><span class="line">					(<span class="keyword">double</span>)raw.accelerometer_m_s2[<span class="number">1</span>],</span><br><span class="line">					(<span class="keyword">double</span>)raw.accelerometer_m_s2[<span class="number">2</span>]);</span><br><span class="line"> </span><br><span class="line">				<span class="comment">/* 赋值 att 并且发布这些数据给其他的应用 */</span></span><br><span class="line">				att.roll = raw.accelerometer_m_s2[<span class="number">0</span>];</span><br><span class="line">				att.pitch = raw.accelerometer_m_s2[<span class="number">1</span>];</span><br><span class="line">				att.yaw = raw.accelerometer_m_s2[<span class="number">2</span>];</span><br><span class="line">				orb_publish(ORB_ID(vehicle_attitude), att_pub_fd, &amp;att);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">/* there could be more file descriptors here, in the form like:</span><br><span class="line">			 * if (fds[1..n].revents &amp; POLLIN) &#123;&#125;</span><br><span class="line">			 */</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="4-4-创建自己的主题"><a href="#4-4-创建自己的主题" class="headerlink" title="4.4 创建自己的主题"></a>4.4 创建自己的主题</h5><p>&emsp;&emsp;官方提供的通用接口标准主题都放在了topics文件夹下了。如果要定义我们自己的主题，比如我们新添加了超声波传感器，为了将超声波传感器的数据发布出去给其他需要的应用订阅，那么久需要创建我们的主题了。</p>
+<ul>
+<li>主题头文件（mytopic.h）<ul>
+<li>ORB_DECLARE(myTopicName);//声明一个主题</li>
+<li>定义一个存放发布数据的结构体；</li>
+</ul>
+</li>
+<li>主题源文件（mytopic.c）<ul>
+<li>ORB_DEFINE(myTopicName);//定义一个主题</li>
+<li>初始化发布数据</li>
+<li>公告主题</li>
+<li>发布主题数据</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>mytopic.h</strong></p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 声明自定义主题，名字可以自定义，不过最好具有一定的意义，如下为随机产生整数数据 */</span></span><br><span class="line">ORB_DECLARE(random_integer);</span><br><span class="line"> </span><br><span class="line"><span class="comment">/* 定义要发布的数据结构体 */</span></span><br><span class="line"><span class="keyword">struct</span> random_integer_data &#123;</span><br><span class="line">	<span class="keyword">int</span> r;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>mytopic_publish.c</strong></p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;topic.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="comment">/* 定义主题 */</span></span><br><span class="line">ORB_DEFINE(random_integer);</span><br><span class="line"> </span><br><span class="line"><span class="comment">/* 待发布的主题句柄 */</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> topic_handle;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">init</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="comment">/* 随机产生一个数初始化数据结构体 */</span></span><br><span class="line">	<span class="keyword">struct</span> random_integer_data rd = &#123; .r = random(), &#125;;</span><br><span class="line"> </span><br><span class="line">	<span class="comment">/* 公告主题 */</span></span><br><span class="line">	topic_handle = orb_advertise(ORB_ID(random_integer), &amp;rd);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">update_topic</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="comment">/* 产生新的数据 */</span></span><br><span class="line">	<span class="keyword">struct</span> random_integer_data rd = &#123; .r = random(), &#125;;</span><br><span class="line"> </span><br><span class="line">	<span class="comment">/* 发布主题，更新数据 */</span></span><br><span class="line">	orb_publish(ORB_ID(random_integer), topic_handle, &amp;rd);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;对于订阅者来说，就可以参考主题「<code>4.2 订阅例程</code>」了。不过这里还是提供下简单处理例程：</p>
+<blockquote>
+<p><strong>mytopic_subscriber.c</strong></p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;topic.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="comment">/* 订阅主题的句柄*/</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> topic_handle;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">init</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="comment">/* 订阅主题 */</span></span><br><span class="line">	topic_handle = orb_subscribe(ORB_ID(random_integer));</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">check_topic</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">bool</span> updated;</span><br><span class="line">	<span class="keyword">struct</span> random_integer_data rd;</span><br><span class="line"> </span><br><span class="line">	<span class="comment">/* check to see whether the topic has updated since the last time we read it */</span></span><br><span class="line">	orb_check(topic_handle, &amp;updated);</span><br><span class="line"> </span><br><span class="line">	<span class="keyword">if</span> (updated) &#123;</span><br><span class="line">		<span class="comment">/* make a local copy of the updated data structure */</span></span><br><span class="line">		orb_copy(ORB_ID(random_integer), topic_handle, &amp;rd);</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"Random integer is now %d\n"</span>, rd.r);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="5-参考资料"><a href="#5-参考资料" class="headerlink" title="5 参考资料"></a>5 参考资料</h3><p>&emsp;&emsp;<a href="http://www.pixhawk.com/start?id=zh/dev/px4_simple_app" title="第一个机载应用程序" target="_blank" rel="external">http://www.pixhawk.com/start?id=zh/dev/px4_simple_app</a><br>&emsp;&emsp;<a href="http://www.pixhawk.com/dev/shared_object_communication" title="进程间通信开发指南" target="_blank" rel="external">http://www.pixhawk.com/dev/shared_object_communication</a><br>&emsp;&emsp;<a href="http://blog.arm.so/armteg/pixhawk/183-0503.html" title="Pixhawk飞控系统之uORB深入解析" target="_blank" rel="external">http://blog.arm.so/armteg/pixhawk/183-0503.html</a><br>&emsp;&emsp;<a href="http://pixhawk.org/start?id=dev/software_architecture" title="PX4/Pixhawk的软件体系结构" target="_blank" rel="external">http://pixhawk.org/start?id=dev/software_architecture</a><br>&emsp;&emsp;<a href="http://www.pixhawk.com/dev/add_uorb_topic?s[]=objects&amp;s[]=common" target="_blank" rel="external">http://www.pixhawk.com/dev/add_uorb_topic?s[]=objects&amp;s[]=common</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/无人机/" rel="tag">#无人机</a>
+          
+            <a href="/tags/pixhawk/" rel="tag">#pixhawk</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/07/09/pixhawk-quick-start/" rel="next" title="PX4/Pixhawk之快速成为开发者（Windows）">
+                <i class="fa fa-chevron-left"></i> PX4/Pixhawk之快速成为开发者（Windows）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/07/16/pixhawk-nsh-uorb-debug-application/" rel="prev" title="PX4/Pixhawk之基于NSH调试的uORB第一个应用测试">
+                PX4/Pixhawk之基于NSH调试的uORB第一个应用测试 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2015/07/14/pixhawk-uorb-understand-application/"
+     data-title="PX4/Pixhawk之uORB深入理解和应用"
+     data-content=""
+     data-url="http://yicm.me/2015/07/14/pixhawk-uorb-understand-application/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/07/14/pixhawk-uorb-understand-application/"
+           data-title="PX4/Pixhawk之uORB深入理解和应用" data-url="http://yicm.me/2015/07/14/pixhawk-uorb-understand-application/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/avatar/avatar.jpg"
+               alt="依成名" />
+          <p class="site-author-name" itemprop="name">依成名</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/freeape" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/freeape" target="_blank" title="CSDN">
+                  
+                    <i class="fa fa-fw fa-angellist"></i>
+                  
+                  CSDN
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/huangyi520forever" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Instructions-of-uORB"><span class="nav-number">1.</span> <span class="nav-text">The Instructions of uORB</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-简介"><span class="nav-number">1.1.</span> <span class="nav-text">1 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-PX4-Pixhawk的软件体系结构"><span class="nav-number">1.1.0.1.</span> <span class="nav-text">1.1 PX4/Pixhawk的软件体系结构</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-PX4-Pixhawk应用程序框架"><span class="nav-number">1.1.0.2.</span> <span class="nav-text">1.2 PX4/Pixhawk应用程序框架</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-uORB文件夹说明"><span class="nav-number">1.2.</span> <span class="nav-text">2 uORB文件夹说明</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-uORB文件夹结构"><span class="nav-number">1.2.0.1.</span> <span class="nav-text">2.1 uORB文件夹结构</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-文件-目录说明"><span class="nav-number">1.2.0.2.</span> <span class="nav-text">2.2 文件/目录说明</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-常用函数功能解析"><span class="nav-number">1.3.</span> <span class="nav-text">3 常用函数功能解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-例程"><span class="nav-number">1.4.</span> <span class="nav-text">4 例程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#4-1-例程前准备工作"><span class="nav-number">1.4.0.1.</span> <span class="nav-text">4.1 例程前准备工作</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-2-订阅主题"><span class="nav-number">1.4.0.2.</span> <span class="nav-text">4.2 订阅主题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-3-订阅和发布主题"><span class="nav-number">1.4.0.3.</span> <span class="nav-text">4.3 订阅和发布主题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-4-创建自己的主题"><span class="nav-number">1.4.0.4.</span> <span class="nav-text">4.4 创建自己的主题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-参考资料"><span class="nav-number">1.5.</span> <span class="nav-text">5 参考资料</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">依成名</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"freeape"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("JhJdKepwexwAupA0SXBWX6QQ-gzGzoHsz", "jbRztzIopC6OGVNrRWXw8SUf");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>
