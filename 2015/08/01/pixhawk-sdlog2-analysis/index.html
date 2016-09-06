@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="stm8s," />
+  <meta name="keywords" content="无人机,pixhawk," />
 
 
 
@@ -84,40 +84,26 @@
 
 
 
-<meta name="description" content="详见博客：http://blog.csdn.net/freeape/article/details/46778003
-1 说明
-采用STM8S内部时钟（HSI）；
-PWM模式2；
-占空比为50%，频率为2Hz(方便测试LED灯)；
-PD2口外接LED灯，PD2口输出PWM波；
-系统时钟初始化很重要:CLK_CKDIVR  |=  0x08;
-
-2 代码12345678910111213141516">
+<meta name="description" content="详见博客 : http://blog.csdn.net/freeape/article/details/47188287
+sdlog2 app&amp;emsp;&amp;emsp;该应用的用途是记录飞控飞行日志到SD卡中，日志文件格式与APM二进制文件兼容，但是sdlog2使用强制性的消息时间写时间戳。
+使用方式&amp;emsp;&amp;emsp;每次sdlog2应用开始记录日志的时候，它会在SD卡日志文件夹log中创建一">
 <meta property="og:type" content="article">
-<meta property="og:title" content="STM8S之定时器产生PWM（TIM2）">
-<meta property="og:url" content="http://yicm.me/2015/07/06/stm8s-timer-pwm/index.html">
+<meta property="og:title" content="Pixhawk之sdlog2应用详解">
+<meta property="og:url" content="http://yicm.me/2015/08/01/pixhawk-sdlog2-analysis/index.html">
 <meta property="og:site_name" content="依成名的博客">
-<meta property="og:description" content="详见博客：http://blog.csdn.net/freeape/article/details/46778003
-1 说明
-采用STM8S内部时钟（HSI）；
-PWM模式2；
-占空比为50%，频率为2Hz(方便测试LED灯)；
-PD2口外接LED灯，PD2口输出PWM波；
-系统时钟初始化很重要:CLK_CKDIVR  |=  0x08;
-
-2 代码12345678910111213141516">
-<meta property="og:updated_time" content="2016-09-05T17:23:00.226Z">
+<meta property="og:description" content="详见博客 : http://blog.csdn.net/freeape/article/details/47188287
+sdlog2 app&amp;emsp;&amp;emsp;该应用的用途是记录飞控飞行日志到SD卡中，日志文件格式与APM二进制文件兼容，但是sdlog2使用强制性的消息时间写时间戳。
+使用方式&amp;emsp;&amp;emsp;每次sdlog2应用开始记录日志的时候，它会在SD卡日志文件夹log中创建一">
+<meta property="og:image" content="http://img.blog.csdn.net/20150801171609311">
+<meta property="og:image" content="http://img.blog.csdn.net/20150801171505745">
+<meta property="og:image" content="http://img.blog.csdn.net/20150801171526212">
+<meta property="og:updated_time" content="2016-09-06T16:12:06.761Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="STM8S之定时器产生PWM（TIM2）">
-<meta name="twitter:description" content="详见博客：http://blog.csdn.net/freeape/article/details/46778003
-1 说明
-采用STM8S内部时钟（HSI）；
-PWM模式2；
-占空比为50%，频率为2Hz(方便测试LED灯)；
-PD2口外接LED灯，PD2口输出PWM波；
-系统时钟初始化很重要:CLK_CKDIVR  |=  0x08;
-
-2 代码12345678910111213141516">
+<meta name="twitter:title" content="Pixhawk之sdlog2应用详解">
+<meta name="twitter:description" content="详见博客 : http://blog.csdn.net/freeape/article/details/47188287
+sdlog2 app&amp;emsp;&amp;emsp;该应用的用途是记录飞控飞行日志到SD卡中，日志文件格式与APM二进制文件兼容，但是sdlog2使用强制性的消息时间写时间戳。
+使用方式&amp;emsp;&amp;emsp;每次sdlog2应用开始记录日志的时候，它会在SD卡日志文件夹log中创建一">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20150801171609311">
 
 
 
@@ -135,7 +121,7 @@ PD2口外接LED灯，PD2口输出PWM波；
   };
 </script>
 
-  <title> STM8S之定时器产生PWM（TIM2） | 依成名的博客 </title>
+  <title> Pixhawk之sdlog2应用详解 | 依成名的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -285,7 +271,7 @@ PD2口外接LED灯，PD2口输出PWM波；
             
             
               
-                STM8S之定时器产生PWM（TIM2）
+                Pixhawk之sdlog2应用详解
               
             
           </h1>
@@ -297,8 +283,8 @@ PD2口外接LED灯，PD2口输出PWM波；
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-07-06T18:56:51+08:00" content="2015-07-06">
-              2015-07-06
+            <time itemprop="dateCreated" datetime="2015-08-01T17:17:51+08:00" content="2015-08-01">
+              2015-08-01
             </time>
           </span>
 
@@ -311,8 +297,8 @@ PD2口外接LED灯，PD2口输出PWM波；
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/硬件/" itemprop="url" rel="index">
-                    <span itemprop="name">硬件</span>
+                  <a href="/categories/无人机/" itemprop="url" rel="index">
+                    <span itemprop="name">无人机</span>
                   </a>
                 </span>
 
@@ -327,8 +313,8 @@ PD2口外接LED灯，PD2口输出PWM波；
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/07/06/stm8s-timer-pwm/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/06/stm8s-timer-pwm/" itemprop="commentsCount"></span>
+                <a href="/2015/08/01/pixhawk-sdlog2-analysis/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/08/01/pixhawk-sdlog2-analysis/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -338,7 +324,7 @@ PD2口外接LED灯，PD2口输出PWM波；
 
           
           
-             <span id="/2015/07/06/stm8s-timer-pwm/" class="leancloud_visitors" data-flag-title="STM8S之定时器产生PWM（TIM2）">
+             <span id="/2015/08/01/pixhawk-sdlog2-analysis/" class="leancloud_visitors" data-flag-title="Pixhawk之sdlog2应用详解">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -360,15 +346,53 @@ PD2口外接LED灯，PD2口输出PWM波；
       
 
       
-        <p>详见博客：<a href="http://blog.csdn.net/freeape/article/details/46778003" target="_blank" rel="external">http://blog.csdn.net/freeape/article/details/46778003</a></p>
-<h2 id="1-说明"><a href="#1-说明" class="headerlink" title="1 说明"></a>1 说明</h2><ul>
-<li>采用STM8S内部时钟（HSI）；</li>
-<li>PWM模式2；</li>
-<li>占空比为50%，频率为2Hz(方便测试LED灯)；</li>
-<li>PD2口外接LED灯，PD2口输出PWM波；</li>
-<li>系统时钟初始化很重要:CLK_CKDIVR  <strong>|=</strong>  0x08;</li>
+        <p>详见博客 : <a href="http://blog.csdn.net/freeape/article/details/47188287" target="_blank" rel="external">http://blog.csdn.net/freeape/article/details/47188287</a></p>
+<h1 id="sdlog2-app"><a href="#sdlog2-app" class="headerlink" title="sdlog2 app"></a>sdlog2 app</h1><p>&emsp;&emsp;该应用的用途是记录飞控飞行日志到SD卡中，日志文件格式与APM二进制文件兼容，但是<code>sdlog2</code>使用强制性的消息时间写时间戳。</p>
+<h1 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h1><p>&emsp;&emsp;每次<code>sdlog2</code>应用开始记录日志的时候，它会在SD卡日志文件夹<strong><code>log</code></strong>中创建一个新的文件夹。如果<strong><code>-t</code></strong>参数选项被设置了，而且GPS时间戳是可获得的，文件夹的名称就是基于当前日期，如<strong><code>log/2015-07-24</code></strong>，否则的话就是被命名为<strong><code>sessXXX</code></strong>（XXX代表一个序列号）。文件夹中的文件命名也大同小异，如果<strong><code>-t</code></strong>选项已设置，文件名为<strong><code>log/2015-07-24/11_43_52.bin</code></strong>，否则的话就被命名为<strong><code>log.XXX.bin</code></strong>（XXX也为序列号）。</p>
+<p>&emsp;&emsp;无论sdlog2应用是否已经启动了、系统已经被配置好了，还是mavlink命令，日志的记录都取决于sdlog2应用所设置的选项。选项说明如下：</p>
+<pre><code>usage: sdlog2 {start|stop|status|on|off} [-r &lt;log rate&gt;] [-b &lt;buffer size&gt;] -e -a -t -x
+    -r      Log rate in Hz, 0 means unlimited rate
+    -b      Log buffer size in KiB, default is 8
+    -e      Enable logging by default (if not, can be started by command)
+    -a      Log only when armed (can be still overriden by command)
+    -t      Use date/time for naming log directories and files
+    -x      Extended logging
+</code></pre><blockquote>
+<p><img src="http://img.blog.csdn.net/20150801171609311" alt="这里写图片描述">日志记录的性能取决于所使用的SD的读写速度，使用较好的SD卡可以有效的避免跳过写入/读取数据。当sdlog2应用在全速率的时候（即没有<strong><code>-r</code></strong>选项），可能会导致CPU负荷，但对飞行没有负面影响。但是如果没有满足全速率要求，则可能会记录会跳过信息。</p>
+</blockquote>
+<h1 id="日志记录开启"><a href="#日志记录开启" class="headerlink" title="日志记录开启"></a>日志记录开启</h1><p>&emsp;&emsp;在正常情况下，随着飞控的配置好，日志记录就启动了，且只有激活飞行的数据才是所需要的数据。要启动手动日志记录，在控制台上执行下面的命令：</p>
+<pre><code>sdlog2 stop
+sdlog2 start -t -r 200 -e -b 16
+</code></pre><p>&emsp;&emsp;停止记录：</p>
+<pre><code>sdlog2 stop
+</code></pre><h1 id="分析日志"><a href="#分析日志" class="headerlink" title="分析日志"></a>分析日志</h1><h2 id="FlightPlot工具（—推荐使用）"><a href="#FlightPlot工具（—推荐使用）" class="headerlink" title="FlightPlot工具（—推荐使用）"></a>FlightPlot工具（—推荐使用）</h2><pre><code>Fields List
+</code></pre><p><img src="http://img.blog.csdn.net/20150801171505745" alt="这里写图片描述"></p>
+<pre><code>FlightPlot Analysis
+</code></pre><p><img src="http://img.blog.csdn.net/20150801171526212" alt="这里写图片描述"><br>&emsp;&emsp;查看和分析日志，可以使用<strong><a href="http://www.pixhawk.com/dev/flightplot" target="_blank" rel="external">FlightPlot</a></strong>GUI工具（提供了可执行的jar包），下载下来并安装好Java后双击就可以执行了。无需转换日志文件，就可以读取由sdlog2应用产生的二进制日志文件，并通过图形方式显示。具体的用法见链接。</p>
+<p>&emsp;&emsp;FlightPlot支持的日志文件：</p>
+<ul>
+<li>PX4 autopilot log(.bin generated by sdlog2)</li>
+<li>APM binary logs (.bin files stored on SD card) (added in v.0.2.6)</li>
+<li>支持mavlink日志</li>
 </ul>
-<h2 id="2-代码"><a href="#2-代码" class="headerlink" title="2 代码"></a>2 代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line">TIM2_CH3 PWM</span><br><span class="line">PD2 output</span><br><span class="line">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;STM8S003F3P.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CLK_init</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	CLK_ICKR |= <span class="number">0X01</span>;    		<span class="comment">//使能内部高速时钟 HSI</span></span><br><span class="line">	CLK_CKDIVR |= <span class="number">0x08</span>;			<span class="comment">//16M内部RC经2分频后系统时钟为8M</span></span><br><span class="line">	<span class="keyword">while</span>(!(CLK_ICKR&amp;<span class="number">0x02</span>));	<span class="comment">//HSI准备就绪 </span></span><br><span class="line">	CLK_SWR=<span class="number">0xe1</span>;				<span class="comment">//HSI为主时钟源 </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_Tim2</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	TIM2_CCMR3 |=	<span class="number">0X70</span>;   <span class="comment">//设置定时器2三通道(PD2)输出比较三模式</span></span><br><span class="line">	TIM2_CCMR3 |= <span class="number">0X04</span>;		<span class="comment">//输出比较3预装载使能</span></span><br><span class="line">	</span><br><span class="line">	TIM2_CCER2 |= <span class="number">0x03</span>;		<span class="comment">//通道3使能，低电平有效，配置为输出</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">//初始化时钟分频器为1，即计数器的时钟频率为Fmaster=8M/64=0.125MHZ</span></span><br><span class="line">	TIM2_PSCR = <span class="number">0X06</span>;	</span><br><span class="line">	<span class="comment">//初始化自动装载寄存器，决定PWM 方波的频率，Fpwm=0.125M/62500=2HZ</span></span><br><span class="line">	TIM2_ARRH = <span class="number">62500</span>/<span class="number">256</span>;</span><br><span class="line">	TIM2_ARRL = <span class="number">62500</span>%<span class="number">256</span>;</span><br><span class="line">	<span class="comment">//初始化比较寄存器，决定PWM 方波的占空比：5000/10000 = 50%</span></span><br><span class="line">	TIM2_CCR3H = <span class="number">31250</span>/<span class="number">256</span>;</span><br><span class="line">	TIM2_CCR3L = <span class="number">31250</span>%<span class="number">256</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 启动计数;更新中断失能</span></span><br><span class="line">	TIM2_CR1 |= <span class="number">0x81</span>;</span><br><span class="line">	<span class="comment">//TIM2_IER |= 0x00;        </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_GPIO</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="comment">/*设置为推挽输出,PD2接了LED灯*/</span></span><br><span class="line">	PD_DDR |= <span class="number">0X04</span>;     		<span class="comment">//设置PD2端口为输出模式</span></span><br><span class="line">	PD_CR1 |= <span class="number">0X04</span>;     		<span class="comment">//设置PD2端口为推挽输出模式</span></span><br><span class="line">	PD_CR2 &amp;= <span class="number">0XFD</span>;</span><br><span class="line">	</span><br><span class="line">	PA_DDR |= <span class="number">0X08</span>;     		<span class="comment">//设置PA3端口为输出模式</span></span><br><span class="line">	PA_CR1 |= <span class="number">0X08</span>;     		<span class="comment">//设置PA3端口为推挽输出模式</span></span><br><span class="line">	PA_CR2 |= <span class="number">0XF7</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	CLK_init();</span><br><span class="line">	Init_GPIO();</span><br><span class="line">	Init_Tim2();</span><br><span class="line">	<span class="keyword">while</span> (<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Pymavlink工具"><a href="#Pymavlink工具" class="headerlink" title="Pymavlink工具"></a>Pymavlink工具</h2><p>&emsp;&emsp;还可以使用包含在<strong><a href="http://www.pixhawk.com/dev/pymavlink" target="_blank" rel="external">Pymavlink</a></strong>软件中的mavgraph工具来绘制日志图像。Pymavlink提供了许多命令行和可视化的工具用于分析数据和制图。它支持mavlink日志（APM或PX4的均可）。</p>
+<h2 id="Matlab（转换logs成CVS）工具"><a href="#Matlab（转换logs成CVS）工具" class="headerlink" title="Matlab（转换logs成CVS）工具"></a>Matlab（转换logs成CVS）工具</h2><p>&emsp;&emsp;读取二进制文件，并将其转换成CVS文件，可以使用<strong><a href="https://github.com/PX4/Firmware/tree/master/Tools/sdlog2" target="_blank" rel="external">Python或者Matlab脚本</a></strong>文件来实现。分析数据是通过选用不同的参数选项来查看的，具体的用法就不介绍了（都是命令式的，有点麻烦）。</p>
+<pre><code>logconv.m:自动转换日志文件，并图形显示飞行的数据。
+sdlog2_dump.py:Python脚本，将二进制形式的日志文件转换成CVS格式的文件。
+</code></pre><h1 id="可能遇到的故障"><a href="#可能遇到的故障" class="headerlink" title="可能遇到的故障"></a>可能遇到的故障</h1><p>&emsp;&emsp;为避免在IO带重负载的关键应用中，在侦听消息和写日志到SD卡上有一个缓冲区。如果在某些时候这个缓冲区溢出了，那么一些日志记录就会被跳过了。跳过的记录数据能够通过控制台使用sdlog2应用检测出来。这个也会在关闭日志文件的时候打印出来，不过需加<strong><code>-a</code></strong>选项。由上可知，如果跳过的记录不为零，那么就需要增加这个缓冲区的大小了，下面的命令就是将默认的8KB缓冲区改为16KB:</p>
+<pre><code>sdlog2 start -t -r 100 -e -b 16
+</code></pre><h1 id="负载测试"><a href="#负载测试" class="headerlink" title="负载测试"></a>负载测试</h1><p>&emsp;&emsp;测试SD的传输速率，启动sdlog2应用应配置成记录日志速率为200Hz，32KB的缓冲区，并加上<strong><code>-e</code></strong>选项：</p>
+<pre><code>首先停止应用：
+sdlog2 stop
+sdlog2 start -t -r 200 -e -b 32
+运行perf命令查看诱导sdlog2负荷：
+(NOTE: 性能计数器只在记录时存在)
+perf
+或者运行运行top命令：
+top
+停止应用，清理文件系统：
+sdlog2 stop
+</code></pre>
       
     </div>
 
@@ -389,7 +413,9 @@ PD2口外接LED灯，PD2口输出PWM波；
       
         <div class="post-tags">
           
-            <a href="/tags/stm8s/" rel="tag">#stm8s</a>
+            <a href="/tags/无人机/" rel="tag">#无人机</a>
+          
+            <a href="/tags/pixhawk/" rel="tag">#pixhawk</a>
           
         </div>
       
@@ -398,16 +424,16 @@ PD2口外接LED灯，PD2口输出PWM波；
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/07/06/stm8s-io-multiplexed/" rel="next" title="STM8S之IO复用配置(STVP方式)">
-                <i class="fa fa-chevron-left"></i> STM8S之IO复用配置(STVP方式)
+              <a href="/2015/08/01/pixhawk-nsh-firmware-debug/" rel="next" title="Pixhawk之基于NSH的Firmware开发与调试">
+                <i class="fa fa-chevron-left"></i> Pixhawk之基于NSH的Firmware开发与调试
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/07/07/stm8s-single-key-pressed/" rel="prev" title="STM8S之独立按键IO口设置及按下事件问题">
-                STM8S之独立按键IO口设置及按下事件问题 <i class="fa fa-chevron-right"></i>
+              <a href="/2015/08/20/pixhawk-bootloader-burn-fmu-io/" rel="prev" title="Pixhawk之烧写FMU/IO bootloader">
+                Pixhawk之烧写FMU/IO bootloader <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -423,10 +449,10 @@ PD2口外接LED灯，PD2口输出PWM波；
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2015/07/06/stm8s-timer-pwm/"
-     data-title="STM8S之定时器产生PWM（TIM2）"
+        <div class="ds-share flat" data-thread-key="2015/08/01/pixhawk-sdlog2-analysis/"
+     data-title="Pixhawk之sdlog2应用详解"
      data-content=""
-     data-url="http://yicm.me/2015/07/06/stm8s-timer-pwm/">
+     data-url="http://yicm.me/2015/08/01/pixhawk-sdlog2-analysis/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -453,8 +479,8 @@ PD2口外接LED灯，PD2口输出PWM波；
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/07/06/stm8s-timer-pwm/"
-           data-title="STM8S之定时器产生PWM（TIM2）" data-url="http://yicm.me/2015/07/06/stm8s-timer-pwm/">
+      <div class="ds-thread" data-thread-key="2015/08/01/pixhawk-sdlog2-analysis/"
+           data-title="Pixhawk之sdlog2应用详解" data-url="http://yicm.me/2015/08/01/pixhawk-sdlog2-analysis/">
       </div>
     
   </div>
@@ -574,7 +600,7 @@ PD2口外接LED灯，PD2口输出PWM波；
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-说明"><span class="nav-number">1.</span> <span class="nav-text">1 说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-代码"><span class="nav-number">2.</span> <span class="nav-text">2 代码</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#sdlog2-app"><span class="nav-number">1.</span> <span class="nav-text">sdlog2 app</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用方式"><span class="nav-number">2.</span> <span class="nav-text">使用方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#日志记录开启"><span class="nav-number">3.</span> <span class="nav-text">日志记录开启</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分析日志"><span class="nav-number">4.</span> <span class="nav-text">分析日志</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#FlightPlot工具（—推荐使用）"><span class="nav-number">4.1.</span> <span class="nav-text">FlightPlot工具（—推荐使用）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pymavlink工具"><span class="nav-number">4.2.</span> <span class="nav-text">Pymavlink工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Matlab（转换logs成CVS）工具"><span class="nav-number">4.3.</span> <span class="nav-text">Matlab（转换logs成CVS）工具</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#可能遇到的故障"><span class="nav-number">5.</span> <span class="nav-text">可能遇到的故障</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#负载测试"><span class="nav-number">6.</span> <span class="nav-text">负载测试</span></a></li></ol></div>
             
           </div>
         </section>

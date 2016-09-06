@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="stm8s," />
+  <meta name="keywords" content="无人机,pixhawk," />
 
 
 
@@ -84,40 +84,25 @@
 
 
 
-<meta name="description" content="详见博客：http://blog.csdn.net/freeape/article/details/46778003
-1 说明
-采用STM8S内部时钟（HSI）；
-PWM模式2；
-占空比为50%，频率为2Hz(方便测试LED灯)；
-PD2口外接LED灯，PD2口输出PWM波；
-系统时钟初始化很重要:CLK_CKDIVR  |=  0x08;
-
-2 代码12345678910111213141516">
+<meta name="description" content="详见博客 : http://blog.csdn.net/freeape/article/details/47808253
+Pixhawk—FMU/IO烧写Bootloader说明&amp;emsp;&amp;emsp;用J-link来烧写Bootloader，Pixhawk板FMU/IO接口说明：&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;J-link接口说明：&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="STM8S之定时器产生PWM（TIM2）">
-<meta property="og:url" content="http://yicm.me/2015/07/06/stm8s-timer-pwm/index.html">
+<meta property="og:title" content="Pixhawk之烧写FMU/IO bootloader">
+<meta property="og:url" content="http://yicm.me/2015/08/20/pixhawk-bootloader-burn-fmu-io/index.html">
 <meta property="og:site_name" content="依成名的博客">
-<meta property="og:description" content="详见博客：http://blog.csdn.net/freeape/article/details/46778003
-1 说明
-采用STM8S内部时钟（HSI）；
-PWM模式2；
-占空比为50%，频率为2Hz(方便测试LED灯)；
-PD2口外接LED灯，PD2口输出PWM波；
-系统时钟初始化很重要:CLK_CKDIVR  |=  0x08;
-
-2 代码12345678910111213141516">
-<meta property="og:updated_time" content="2016-09-05T17:23:00.226Z">
+<meta property="og:description" content="详见博客 : http://blog.csdn.net/freeape/article/details/47808253
+Pixhawk—FMU/IO烧写Bootloader说明&amp;emsp;&amp;emsp;用J-link来烧写Bootloader，Pixhawk板FMU/IO接口说明：&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;J-link接口说明：&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;">
+<meta property="og:image" content="http://img.blog.csdn.net/20150820151134917">
+<meta property="og:image" content="http://img.blog.csdn.net/20150820151146556">
+<meta property="og:image" content="http://img.blog.csdn.net/20150820151201205">
+<meta property="og:image" content="http://img.blog.csdn.net/20150820151209564">
+<meta property="og:image" content="http://img.blog.csdn.net/20150820151215381">
+<meta property="og:updated_time" content="2016-09-06T16:14:42.680Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="STM8S之定时器产生PWM（TIM2）">
-<meta name="twitter:description" content="详见博客：http://blog.csdn.net/freeape/article/details/46778003
-1 说明
-采用STM8S内部时钟（HSI）；
-PWM模式2；
-占空比为50%，频率为2Hz(方便测试LED灯)；
-PD2口外接LED灯，PD2口输出PWM波；
-系统时钟初始化很重要:CLK_CKDIVR  |=  0x08;
-
-2 代码12345678910111213141516">
+<meta name="twitter:title" content="Pixhawk之烧写FMU/IO bootloader">
+<meta name="twitter:description" content="详见博客 : http://blog.csdn.net/freeape/article/details/47808253
+Pixhawk—FMU/IO烧写Bootloader说明&amp;emsp;&amp;emsp;用J-link来烧写Bootloader，Pixhawk板FMU/IO接口说明：&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;J-link接口说明：&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20150820151134917">
 
 
 
@@ -135,7 +120,7 @@ PD2口外接LED灯，PD2口输出PWM波；
   };
 </script>
 
-  <title> STM8S之定时器产生PWM（TIM2） | 依成名的博客 </title>
+  <title> Pixhawk之烧写FMU/IO bootloader | 依成名的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -285,7 +270,7 @@ PD2口外接LED灯，PD2口输出PWM波；
             
             
               
-                STM8S之定时器产生PWM（TIM2）
+                Pixhawk之烧写FMU/IO bootloader
               
             
           </h1>
@@ -297,8 +282,8 @@ PD2口外接LED灯，PD2口输出PWM波；
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-07-06T18:56:51+08:00" content="2015-07-06">
-              2015-07-06
+            <time itemprop="dateCreated" datetime="2015-08-20T15:13:51+08:00" content="2015-08-20">
+              2015-08-20
             </time>
           </span>
 
@@ -311,8 +296,8 @@ PD2口外接LED灯，PD2口输出PWM波；
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/硬件/" itemprop="url" rel="index">
-                    <span itemprop="name">硬件</span>
+                  <a href="/categories/无人机/" itemprop="url" rel="index">
+                    <span itemprop="name">无人机</span>
                   </a>
                 </span>
 
@@ -327,8 +312,8 @@ PD2口外接LED灯，PD2口输出PWM波；
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/07/06/stm8s-timer-pwm/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/06/stm8s-timer-pwm/" itemprop="commentsCount"></span>
+                <a href="/2015/08/20/pixhawk-bootloader-burn-fmu-io/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/08/20/pixhawk-bootloader-burn-fmu-io/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -338,7 +323,7 @@ PD2口外接LED灯，PD2口输出PWM波；
 
           
           
-             <span id="/2015/07/06/stm8s-timer-pwm/" class="leancloud_visitors" data-flag-title="STM8S之定时器产生PWM（TIM2）">
+             <span id="/2015/08/20/pixhawk-bootloader-burn-fmu-io/" class="leancloud_visitors" data-flag-title="Pixhawk之烧写FMU/IO bootloader">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -360,15 +345,12 @@ PD2口外接LED灯，PD2口输出PWM波；
       
 
       
-        <p>详见博客：<a href="http://blog.csdn.net/freeape/article/details/46778003" target="_blank" rel="external">http://blog.csdn.net/freeape/article/details/46778003</a></p>
-<h2 id="1-说明"><a href="#1-说明" class="headerlink" title="1 说明"></a>1 说明</h2><ul>
-<li>采用STM8S内部时钟（HSI）；</li>
-<li>PWM模式2；</li>
-<li>占空比为50%，频率为2Hz(方便测试LED灯)；</li>
-<li>PD2口外接LED灯，PD2口输出PWM波；</li>
-<li>系统时钟初始化很重要:CLK_CKDIVR  <strong>|=</strong>  0x08;</li>
-</ul>
-<h2 id="2-代码"><a href="#2-代码" class="headerlink" title="2 代码"></a>2 代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line">TIM2_CH3 PWM</span><br><span class="line">PD2 output</span><br><span class="line">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;STM8S003F3P.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CLK_init</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	CLK_ICKR |= <span class="number">0X01</span>;    		<span class="comment">//使能内部高速时钟 HSI</span></span><br><span class="line">	CLK_CKDIVR |= <span class="number">0x08</span>;			<span class="comment">//16M内部RC经2分频后系统时钟为8M</span></span><br><span class="line">	<span class="keyword">while</span>(!(CLK_ICKR&amp;<span class="number">0x02</span>));	<span class="comment">//HSI准备就绪 </span></span><br><span class="line">	CLK_SWR=<span class="number">0xe1</span>;				<span class="comment">//HSI为主时钟源 </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_Tim2</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	TIM2_CCMR3 |=	<span class="number">0X70</span>;   <span class="comment">//设置定时器2三通道(PD2)输出比较三模式</span></span><br><span class="line">	TIM2_CCMR3 |= <span class="number">0X04</span>;		<span class="comment">//输出比较3预装载使能</span></span><br><span class="line">	</span><br><span class="line">	TIM2_CCER2 |= <span class="number">0x03</span>;		<span class="comment">//通道3使能，低电平有效，配置为输出</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">//初始化时钟分频器为1，即计数器的时钟频率为Fmaster=8M/64=0.125MHZ</span></span><br><span class="line">	TIM2_PSCR = <span class="number">0X06</span>;	</span><br><span class="line">	<span class="comment">//初始化自动装载寄存器，决定PWM 方波的频率，Fpwm=0.125M/62500=2HZ</span></span><br><span class="line">	TIM2_ARRH = <span class="number">62500</span>/<span class="number">256</span>;</span><br><span class="line">	TIM2_ARRL = <span class="number">62500</span>%<span class="number">256</span>;</span><br><span class="line">	<span class="comment">//初始化比较寄存器，决定PWM 方波的占空比：5000/10000 = 50%</span></span><br><span class="line">	TIM2_CCR3H = <span class="number">31250</span>/<span class="number">256</span>;</span><br><span class="line">	TIM2_CCR3L = <span class="number">31250</span>%<span class="number">256</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 启动计数;更新中断失能</span></span><br><span class="line">	TIM2_CR1 |= <span class="number">0x81</span>;</span><br><span class="line">	<span class="comment">//TIM2_IER |= 0x00;        </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_GPIO</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="comment">/*设置为推挽输出,PD2接了LED灯*/</span></span><br><span class="line">	PD_DDR |= <span class="number">0X04</span>;     		<span class="comment">//设置PD2端口为输出模式</span></span><br><span class="line">	PD_CR1 |= <span class="number">0X04</span>;     		<span class="comment">//设置PD2端口为推挽输出模式</span></span><br><span class="line">	PD_CR2 &amp;= <span class="number">0XFD</span>;</span><br><span class="line">	</span><br><span class="line">	PA_DDR |= <span class="number">0X08</span>;     		<span class="comment">//设置PA3端口为输出模式</span></span><br><span class="line">	PA_CR1 |= <span class="number">0X08</span>;     		<span class="comment">//设置PA3端口为推挽输出模式</span></span><br><span class="line">	PA_CR2 |= <span class="number">0XF7</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	CLK_init();</span><br><span class="line">	Init_GPIO();</span><br><span class="line">	Init_Tim2();</span><br><span class="line">	<span class="keyword">while</span> (<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <p>详见博客 : <a href="http://blog.csdn.net/freeape/article/details/47808253" target="_blank" rel="external">http://blog.csdn.net/freeape/article/details/47808253</a></p>
+<h1 id="Pixhawk—FMU-IO烧写Bootloader"><a href="#Pixhawk—FMU-IO烧写Bootloader" class="headerlink" title="Pixhawk—FMU/IO烧写Bootloader"></a>Pixhawk—FMU/IO烧写Bootloader</h1><h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>&emsp;&emsp;用J-link来烧写Bootloader，Pixhawk板FMU/IO接口说明：<br>&emsp;&emsp;<img src="http://img.blog.csdn.net/20150820151134917" alt="这里写图片描述"><br>&emsp;&emsp;J-link接口说明：<br>&emsp;&emsp;<img src="http://img.blog.csdn.net/20150820151146556" alt="这里写图片描述"><br>&emsp;&emsp;Pixhawk与J-link接线说明：<br>&emsp;&emsp;<code>3V3        ---        VCC</code><br>&emsp;&emsp;<code>SWDIO    ---        SWDIO</code><br>&emsp;&emsp;<code>SWCLK    ---        SWCLK</code><br>&emsp;&emsp;<code>GND    ---        GND</code></p>
+<h2 id="安装烧写软件"><a href="#安装烧写软件" class="headerlink" title="安装烧写软件"></a>安装烧写软件</h2><p>&emsp;&emsp;软件下载地址：<a href="https://www.segger.com/jlink-software.html" target="_blank" rel="external">www.segger.com</a><br>&emsp;&emsp;安装好软件后，打开<code>J-Flash Vx.xxi</code>：<br><img src="http://img.blog.csdn.net/20150820151201205" alt="这里写图片描述"></p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>&emsp;&emsp;<code>Options---&gt;Project Setting...</code><br>&emsp;&emsp;选择CPU型号：<br><img src="http://img.blog.csdn.net/20150820151209564" alt="这里写图片描述"><br>&emsp;&emsp;选择连接接口方式（SWD）：<br><img src="http://img.blog.csdn.net/20150820151215381" alt="这里写图片描述"><br>&emsp;&emsp;点击<code>确定</code>。</p>
+<h3 id="导入下载文件下载"><a href="#导入下载文件下载" class="headerlink" title="导入下载文件下载"></a>导入下载文件下载</h3><p>&emsp;&emsp;首先将Pixhawk和J-link连线连接好；<br>&emsp;&emsp;<code>Target---&gt;Connect</code>连接目标板，出现连接成功提示；<br>&emsp;&emsp;<code>File---&gt;Open data file</code>选择将下载的bootloader，FMU就选择烧写FMU的bootloader的bin文件，IO就选择烧写IO的bootloader的bin文件；<br>&emsp;&emsp;烧写前可擦除原地址内容：<code>Target---&gt;Erase chip</code>;<br>&emsp;&emsp;烧写：<code>Target---&gt;Auto</code>;</p>
+
       
     </div>
 
@@ -389,7 +371,9 @@ PD2口外接LED灯，PD2口输出PWM波；
       
         <div class="post-tags">
           
-            <a href="/tags/stm8s/" rel="tag">#stm8s</a>
+            <a href="/tags/无人机/" rel="tag">#无人机</a>
+          
+            <a href="/tags/pixhawk/" rel="tag">#pixhawk</a>
           
         </div>
       
@@ -398,16 +382,16 @@ PD2口外接LED灯，PD2口输出PWM波；
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/07/06/stm8s-io-multiplexed/" rel="next" title="STM8S之IO复用配置(STVP方式)">
-                <i class="fa fa-chevron-left"></i> STM8S之IO复用配置(STVP方式)
+              <a href="/2015/08/01/pixhawk-sdlog2-analysis/" rel="next" title="Pixhawk之sdlog2应用详解">
+                <i class="fa fa-chevron-left"></i> Pixhawk之sdlog2应用详解
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/07/07/stm8s-single-key-pressed/" rel="prev" title="STM8S之独立按键IO口设置及按下事件问题">
-                STM8S之独立按键IO口设置及按下事件问题 <i class="fa fa-chevron-right"></i>
+              <a href="/2015/08/21/pixhawk-custom-sensor-sonar-serial-port/" rel="prev" title="Pixhawk之通过串口方式添加一个自定义传感器（超声波为例）">
+                Pixhawk之通过串口方式添加一个自定义传感器（超声波为例） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -423,10 +407,10 @@ PD2口外接LED灯，PD2口输出PWM波；
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2015/07/06/stm8s-timer-pwm/"
-     data-title="STM8S之定时器产生PWM（TIM2）"
+        <div class="ds-share flat" data-thread-key="2015/08/20/pixhawk-bootloader-burn-fmu-io/"
+     data-title="Pixhawk之烧写FMU/IO bootloader"
      data-content=""
-     data-url="http://yicm.me/2015/07/06/stm8s-timer-pwm/">
+     data-url="http://yicm.me/2015/08/20/pixhawk-bootloader-burn-fmu-io/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -453,8 +437,8 @@ PD2口外接LED灯，PD2口输出PWM波；
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/07/06/stm8s-timer-pwm/"
-           data-title="STM8S之定时器产生PWM（TIM2）" data-url="http://yicm.me/2015/07/06/stm8s-timer-pwm/">
+      <div class="ds-thread" data-thread-key="2015/08/20/pixhawk-bootloader-burn-fmu-io/"
+           data-title="Pixhawk之烧写FMU/IO bootloader" data-url="http://yicm.me/2015/08/20/pixhawk-bootloader-burn-fmu-io/">
       </div>
     
   </div>
@@ -574,7 +558,7 @@ PD2口外接LED灯，PD2口输出PWM波；
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-说明"><span class="nav-number">1.</span> <span class="nav-text">1 说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-代码"><span class="nav-number">2.</span> <span class="nav-text">2 代码</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Pixhawk—FMU-IO烧写Bootloader"><span class="nav-number">1.</span> <span class="nav-text">Pixhawk—FMU/IO烧写Bootloader</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#说明"><span class="nav-number">1.1.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装烧写软件"><span class="nav-number">1.2.</span> <span class="nav-text">安装烧写软件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">1.2.1.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#导入下载文件下载"><span class="nav-number">1.2.2.</span> <span class="nav-text">导入下载文件下载</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
         </section>

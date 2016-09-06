@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="stm8s," />
+  <meta name="keywords" content="无人机,pixhawk," />
 
 
 
@@ -84,40 +84,27 @@
 
 
 
-<meta name="description" content="详见博客：http://blog.csdn.net/freeape/article/details/46778003
-1 说明
-采用STM8S内部时钟（HSI）；
-PWM模式2；
-占空比为50%，频率为2Hz(方便测试LED灯)；
-PD2口外接LED灯，PD2口输出PWM波；
-系统时钟初始化很重要:CLK_CKDIVR  |=  0x08;
-
-2 代码12345678910111213141516">
+<meta name="description" content="详见博客 : http://blog.csdn.net/freeape/article/details/49024053
+前言&amp;emsp;&amp;emsp;官方开源的Pixhawk固件自2015年10月6号起，删除了makefile文件夹，按照在工具链中的控制台命令行编译，再按照原来的编译步骤去编译时就会出现问题了，因为固件已经由make编译系统转到了cmake编译系统了。
+make编译&amp;emsp;&amp;e">
 <meta property="og:type" content="article">
-<meta property="og:title" content="STM8S之定时器产生PWM（TIM2）">
-<meta property="og:url" content="http://yicm.me/2015/07/06/stm8s-timer-pwm/index.html">
+<meta property="og:title" content="Pixhawk之10月6号后固件编译由make编译系统转到cmake编译系统后">
+<meta property="og:url" content="http://yicm.me/2015/10/10/pixhawk-build-cmake-after-2015-10-05/index.html">
 <meta property="og:site_name" content="依成名的博客">
-<meta property="og:description" content="详见博客：http://blog.csdn.net/freeape/article/details/46778003
-1 说明
-采用STM8S内部时钟（HSI）；
-PWM模式2；
-占空比为50%，频率为2Hz(方便测试LED灯)；
-PD2口外接LED灯，PD2口输出PWM波；
-系统时钟初始化很重要:CLK_CKDIVR  |=  0x08;
-
-2 代码12345678910111213141516">
-<meta property="og:updated_time" content="2016-09-05T17:23:00.226Z">
+<meta property="og:description" content="详见博客 : http://blog.csdn.net/freeape/article/details/49024053
+前言&amp;emsp;&amp;emsp;官方开源的Pixhawk固件自2015年10月6号起，删除了makefile文件夹，按照在工具链中的控制台命令行编译，再按照原来的编译步骤去编译时就会出现问题了，因为固件已经由make编译系统转到了cmake编译系统了。
+make编译&amp;emsp;&amp;e">
+<meta property="og:image" content="http://img.blog.csdn.net/20151010144844519">
+<meta property="og:image" content="http://img.blog.csdn.net/20151010145041042">
+<meta property="og:image" content="http://img.blog.csdn.net/20151010145209559">
+<meta property="og:image" content="http://img.blog.csdn.net/20151010151717984">
+<meta property="og:updated_time" content="2016-09-06T16:22:06.388Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="STM8S之定时器产生PWM（TIM2）">
-<meta name="twitter:description" content="详见博客：http://blog.csdn.net/freeape/article/details/46778003
-1 说明
-采用STM8S内部时钟（HSI）；
-PWM模式2；
-占空比为50%，频率为2Hz(方便测试LED灯)；
-PD2口外接LED灯，PD2口输出PWM波；
-系统时钟初始化很重要:CLK_CKDIVR  |=  0x08;
-
-2 代码12345678910111213141516">
+<meta name="twitter:title" content="Pixhawk之10月6号后固件编译由make编译系统转到cmake编译系统后">
+<meta name="twitter:description" content="详见博客 : http://blog.csdn.net/freeape/article/details/49024053
+前言&amp;emsp;&amp;emsp;官方开源的Pixhawk固件自2015年10月6号起，删除了makefile文件夹，按照在工具链中的控制台命令行编译，再按照原来的编译步骤去编译时就会出现问题了，因为固件已经由make编译系统转到了cmake编译系统了。
+make编译&amp;emsp;&amp;e">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20151010144844519">
 
 
 
@@ -135,7 +122,7 @@ PD2口外接LED灯，PD2口输出PWM波；
   };
 </script>
 
-  <title> STM8S之定时器产生PWM（TIM2） | 依成名的博客 </title>
+  <title> Pixhawk之10月6号后固件编译由make编译系统转到cmake编译系统后 | 依成名的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -285,7 +272,7 @@ PD2口外接LED灯，PD2口输出PWM波；
             
             
               
-                STM8S之定时器产生PWM（TIM2）
+                Pixhawk之10月6号后固件编译由make编译系统转到cmake编译系统后
               
             
           </h1>
@@ -297,8 +284,8 @@ PD2口外接LED灯，PD2口输出PWM波；
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-07-06T18:56:51+08:00" content="2015-07-06">
-              2015-07-06
+            <time itemprop="dateCreated" datetime="2015-10-10T15:01:51+08:00" content="2015-10-10">
+              2015-10-10
             </time>
           </span>
 
@@ -311,8 +298,8 @@ PD2口外接LED灯，PD2口输出PWM波；
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/硬件/" itemprop="url" rel="index">
-                    <span itemprop="name">硬件</span>
+                  <a href="/categories/无人机/" itemprop="url" rel="index">
+                    <span itemprop="name">无人机</span>
                   </a>
                 </span>
 
@@ -327,8 +314,8 @@ PD2口外接LED灯，PD2口输出PWM波；
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/07/06/stm8s-timer-pwm/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/06/stm8s-timer-pwm/" itemprop="commentsCount"></span>
+                <a href="/2015/10/10/pixhawk-build-cmake-after-2015-10-05/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/10/pixhawk-build-cmake-after-2015-10-05/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -338,7 +325,7 @@ PD2口外接LED灯，PD2口输出PWM波；
 
           
           
-             <span id="/2015/07/06/stm8s-timer-pwm/" class="leancloud_visitors" data-flag-title="STM8S之定时器产生PWM（TIM2）">
+             <span id="/2015/10/10/pixhawk-build-cmake-after-2015-10-05/" class="leancloud_visitors" data-flag-title="Pixhawk之10月6号后固件编译由make编译系统转到cmake编译系统后">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -360,15 +347,57 @@ PD2口外接LED灯，PD2口输出PWM波；
       
 
       
-        <p>详见博客：<a href="http://blog.csdn.net/freeape/article/details/46778003" target="_blank" rel="external">http://blog.csdn.net/freeape/article/details/46778003</a></p>
-<h2 id="1-说明"><a href="#1-说明" class="headerlink" title="1 说明"></a>1 说明</h2><ul>
-<li>采用STM8S内部时钟（HSI）；</li>
-<li>PWM模式2；</li>
-<li>占空比为50%，频率为2Hz(方便测试LED灯)；</li>
-<li>PD2口外接LED灯，PD2口输出PWM波；</li>
-<li>系统时钟初始化很重要:CLK_CKDIVR  <strong>|=</strong>  0x08;</li>
+        <p>详见博客 : <a href="http://blog.csdn.net/freeape/article/details/49024053" target="_blank" rel="external">http://blog.csdn.net/freeape/article/details/49024053</a></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>&emsp;&emsp;官方开源的Pixhawk固件自2015年10月6号起，删除了makefile文件夹，按照在工具链中的控制台命令行编译，再按照原来的编译步骤去编译时就会出现问题了，因为固件已经由<code>make</code>编译系统转到了<code>cmake</code>编译系统了。</p>
+<h1 id="make编译"><a href="#make编译" class="headerlink" title="make编译"></a>make编译</h1><p>&emsp;&emsp;<strong>使用<code>make</code>编译系统的编译步骤：</strong></p>
+<ol>
+<li>安装”px4_toolchain_installer_v14_win.exe”</li>
+<li>运行 “PX4 Software Download”</li>
+<li>git submodule init</li>
+<li>git submodule update</li>
+<li>make distclean</li>
+<li>make archives</li>
+<li>make px4fmu-v2_default</li>
+</ol>
+<p>这是2015-10-10的版本，发现已经没有了makefile文件夹：</p>
+<p><img src="http://img.blog.csdn.net/20151010144844519" alt="2015-10-10"></p>
+<h1 id="获取make编译系统的Firmware版本"><a href="#获取make编译系统的Firmware版本" class="headerlink" title="获取make编译系统的Firmware版本"></a>获取make编译系统的Firmware版本</h1><h2 id="方式一"><a href="#方式一" class="headerlink" title="方式一"></a>方式一</h2><p><img src="http://img.blog.csdn.net/20151010145041042" alt="Tag"></p>
+<p>&emsp;&emsp;这些版本都是用make编译系统。想要下载哪个就点击进去：</p>
+<p><img src="http://img.blog.csdn.net/20151010145209559" alt="V1.01"></p>
+<p>&emsp;&emsp;需要注意的是，下载当前版本要下载.zip（如果下载下来后，编译过程中出现了fatal: Not a git repository (or any of the parent directories)问题，请见这篇文章：<a href="http://blog.csdn.net/freeape/article/details/47858527" target="_blank" rel="external">http://blog.csdn.net/freeape/article/details/47858527</a>）：<br><img src="http://img.blog.csdn.net/20151010151717984" alt="zip"></p>
+<h2 id="方式二-推荐"><a href="#方式二-推荐" class="headerlink" title="方式二(推荐)"></a>方式二(推荐)</h2><p>&emsp;&emsp;<strong>通过git版本控制来切换分支得到想要的版本。</strong><br>&emsp;&emsp;在git中，tag就是一个只读的branch，一般为每一个可发布的里程碑版本打一个tag。如在方式一中的tag，v1.0.1、v1.0.0rc12、v1.0.0rc11等。比如想要得到v1.0.1这个分支的代码，可以这样做：</p>
+<ul>
+<li>先将master分支clone到本地<ul>
+<li>git clone <a href="https://github.com/PX4/Firmware.git" target="_blank" rel="external">https://github.com/PX4/Firmware.git</a></li>
 </ul>
-<h2 id="2-代码"><a href="#2-代码" class="headerlink" title="2 代码"></a>2 代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line">TIM2_CH3 PWM</span><br><span class="line">PD2 output</span><br><span class="line">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;STM8S003F3P.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CLK_init</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	CLK_ICKR |= <span class="number">0X01</span>;    		<span class="comment">//使能内部高速时钟 HSI</span></span><br><span class="line">	CLK_CKDIVR |= <span class="number">0x08</span>;			<span class="comment">//16M内部RC经2分频后系统时钟为8M</span></span><br><span class="line">	<span class="keyword">while</span>(!(CLK_ICKR&amp;<span class="number">0x02</span>));	<span class="comment">//HSI准备就绪 </span></span><br><span class="line">	CLK_SWR=<span class="number">0xe1</span>;				<span class="comment">//HSI为主时钟源 </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_Tim2</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	TIM2_CCMR3 |=	<span class="number">0X70</span>;   <span class="comment">//设置定时器2三通道(PD2)输出比较三模式</span></span><br><span class="line">	TIM2_CCMR3 |= <span class="number">0X04</span>;		<span class="comment">//输出比较3预装载使能</span></span><br><span class="line">	</span><br><span class="line">	TIM2_CCER2 |= <span class="number">0x03</span>;		<span class="comment">//通道3使能，低电平有效，配置为输出</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">//初始化时钟分频器为1，即计数器的时钟频率为Fmaster=8M/64=0.125MHZ</span></span><br><span class="line">	TIM2_PSCR = <span class="number">0X06</span>;	</span><br><span class="line">	<span class="comment">//初始化自动装载寄存器，决定PWM 方波的频率，Fpwm=0.125M/62500=2HZ</span></span><br><span class="line">	TIM2_ARRH = <span class="number">62500</span>/<span class="number">256</span>;</span><br><span class="line">	TIM2_ARRL = <span class="number">62500</span>%<span class="number">256</span>;</span><br><span class="line">	<span class="comment">//初始化比较寄存器，决定PWM 方波的占空比：5000/10000 = 50%</span></span><br><span class="line">	TIM2_CCR3H = <span class="number">31250</span>/<span class="number">256</span>;</span><br><span class="line">	TIM2_CCR3L = <span class="number">31250</span>%<span class="number">256</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 启动计数;更新中断失能</span></span><br><span class="line">	TIM2_CR1 |= <span class="number">0x81</span>;</span><br><span class="line">	<span class="comment">//TIM2_IER |= 0x00;        </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_GPIO</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="comment">/*设置为推挽输出,PD2接了LED灯*/</span></span><br><span class="line">	PD_DDR |= <span class="number">0X04</span>;     		<span class="comment">//设置PD2端口为输出模式</span></span><br><span class="line">	PD_CR1 |= <span class="number">0X04</span>;     		<span class="comment">//设置PD2端口为推挽输出模式</span></span><br><span class="line">	PD_CR2 &amp;= <span class="number">0XFD</span>;</span><br><span class="line">	</span><br><span class="line">	PA_DDR |= <span class="number">0X08</span>;     		<span class="comment">//设置PA3端口为输出模式</span></span><br><span class="line">	PA_CR1 |= <span class="number">0X08</span>;     		<span class="comment">//设置PA3端口为推挽输出模式</span></span><br><span class="line">	PA_CR2 |= <span class="number">0XF7</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	CLK_init();</span><br><span class="line">	Init_GPIO();</span><br><span class="line">	Init_Tim2();</span><br><span class="line">	<span class="keyword">while</span> (<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li>在本地的git bash中切换分支：git checkout tag_name<ul>
+<li>git checkout v1.0.1</li>
+</ul>
+</li>
+<li>然后再更新本地仓库，再编译<ul>
+<li>git submodule init</li>
+<li>git submodule update</li>
+</ul>
+</li>
+<li>在工具链中的console中编译<ul>
+<li>make distclean</li>
+<li>make archives</li>
+<li>make px4fmu-v2_default</li>
+</ul>
+</li>
+</ul>
+<h1 id="cmake编译"><a href="#cmake编译" class="headerlink" title="cmake编译"></a>cmake编译</h1><p>&emsp;&emsp;<strong>使用<code>cmake</code>编译系统的编译步骤：(首先是要将最新的固件clone到本地的)</strong></p>
+<ol>
+<li>git submodule init</li>
+<li>git submodule update <code>--recursive</code><ol>
+<li>如果这一步失败了，则make distclean或者git clean -dfx(注意：这将会删除没有在Git版本控制下的所有文件)</li>
+<li>重新来遍</li>
+</ol>
+</li>
+<li>make px4fmu-v2_default</li>
+</ol>
+
       
     </div>
 
@@ -389,7 +418,9 @@ PD2口外接LED灯，PD2口输出PWM波；
       
         <div class="post-tags">
           
-            <a href="/tags/stm8s/" rel="tag">#stm8s</a>
+            <a href="/tags/无人机/" rel="tag">#无人机</a>
+          
+            <a href="/tags/pixhawk/" rel="tag">#pixhawk</a>
           
         </div>
       
@@ -398,17 +429,13 @@ PD2口外接LED灯，PD2口输出PWM波；
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/07/06/stm8s-io-multiplexed/" rel="next" title="STM8S之IO复用配置(STVP方式)">
-                <i class="fa fa-chevron-left"></i> STM8S之IO复用配置(STVP方式)
+              <a href="/2015/08/24/pixhawk-add-sornar-by-ii2/" rel="next" title="Pixhawk之超声波模块添加说明（I2C方式）">
+                <i class="fa fa-chevron-left"></i> Pixhawk之超声波模块添加说明（I2C方式）
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/07/07/stm8s-single-key-pressed/" rel="prev" title="STM8S之独立按键IO口设置及按下事件问题">
-                STM8S之独立按键IO口设置及按下事件问题 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -423,10 +450,10 @@ PD2口外接LED灯，PD2口输出PWM波；
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2015/07/06/stm8s-timer-pwm/"
-     data-title="STM8S之定时器产生PWM（TIM2）"
+        <div class="ds-share flat" data-thread-key="2015/10/10/pixhawk-build-cmake-after-2015-10-05/"
+     data-title="Pixhawk之10月6号后固件编译由make编译系统转到cmake编译系统后"
      data-content=""
-     data-url="http://yicm.me/2015/07/06/stm8s-timer-pwm/">
+     data-url="http://yicm.me/2015/10/10/pixhawk-build-cmake-after-2015-10-05/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -453,8 +480,8 @@ PD2口外接LED灯，PD2口输出PWM波；
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/07/06/stm8s-timer-pwm/"
-           data-title="STM8S之定时器产生PWM（TIM2）" data-url="http://yicm.me/2015/07/06/stm8s-timer-pwm/">
+      <div class="ds-thread" data-thread-key="2015/10/10/pixhawk-build-cmake-after-2015-10-05/"
+           data-title="Pixhawk之10月6号后固件编译由make编译系统转到cmake编译系统后" data-url="http://yicm.me/2015/10/10/pixhawk-build-cmake-after-2015-10-05/">
       </div>
     
   </div>
@@ -574,7 +601,7 @@ PD2口外接LED灯，PD2口输出PWM波；
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-说明"><span class="nav-number">1.</span> <span class="nav-text">1 说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-代码"><span class="nav-number">2.</span> <span class="nav-text">2 代码</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#make编译"><span class="nav-number">2.</span> <span class="nav-text">make编译</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#获取make编译系统的Firmware版本"><span class="nav-number">3.</span> <span class="nav-text">获取make编译系统的Firmware版本</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方式一"><span class="nav-number">3.1.</span> <span class="nav-text">方式一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方式二-推荐"><span class="nav-number">3.2.</span> <span class="nav-text">方式二(推荐)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cmake编译"><span class="nav-number">4.</span> <span class="nav-text">cmake编译</span></a></li></ol></div>
             
           </div>
         </section>
